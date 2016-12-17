@@ -85,6 +85,24 @@ return [
                         'info/error' => 'error.php',
                     ],
                 ],
+                'system*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'info' => 'system.php',
+                        'info/error' => 'error.php',
+                    ],
+                ],
+                'resource*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'info' => 'resource.php',
+                        'info/error' => 'error.php',
+                    ],
+                ]
             ],
         ]
     ],

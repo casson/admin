@@ -1,0 +1,40 @@
+<script>
+function TopClass(ResId) {
+
+        window.top.art.dialog.open('http://www.baidu.com?id=' + ResId,
+                                {
+                                    title: '添加分类',
+                                    height: '550px',
+                                    width: '800px',
+                                     top: 50,
+                                    lock: true,
+                                    close: function () { return true; },
+                                    button: [{
+                                        name: '确定',
+                                        callback: function () {
+
+                                            $("#hfTypeId").val(this.iframe.contentWindow.document.getElementById('hfTypeId').value);
+                                            $("#htRsId").val(this.iframe.contentWindow.document.getElementById('htRsId').value);
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Home/Theme/InsertData?cTypeid=" + $("#hfTypeId").val() + "&RsID=" + $("#htRsId").val(),
+                                                dataType: "text",
+                                                async: false,
+                                                success: function (data) {
+
+                                                }
+                                            });
+                                            return true;
+                                        }
+                                    }, {
+                                        name: '返回',
+                                        callback: function () {
+                                            return true;
+
+                                        }
+                                    }]
+                                });
+    }
+	TopClass(1);
+</script>

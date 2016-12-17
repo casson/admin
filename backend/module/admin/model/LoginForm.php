@@ -124,5 +124,4 @@ class LoginForm extends Model
 		
 		
 	}
->>>>>>> d6feb1a390474ed5d4929bf3ca66f65149218459
 }

@@ -11,14 +11,13 @@ use app\model\RoleResource;
 /**
  * Default controller for the `admin` module
  */
-//class DefaultController extends EController
 class DefaultController extends EController
 {
     //后台管理首页
     public function actionIndex()
     { 
         $this->_loginCheck();   
-        $this->renderPartial('index',array('top_menus'=>$this->getTopMenus()));    
+        return $this->renderPartial('index',array('top_menus'=>$this->getTopMenus()));    
     }
 
     //登录
@@ -53,7 +52,8 @@ class DefaultController extends EController
     {   
         $this->_loginCheck();
         if($_SESSION['role_id']==1){
-            $top_menus=Resource::model()->findAll(array('condition'=>' parent_id=:parent_id and disabled=:disabled  and menu=:menu','params'=>array(':parent_id'=>0,':disabled'=>0,'menu'=>1),'order'=>'list_order ASC'));
+            $top_menus=Resource::findAll(array('parent_id'=>0,'disabled'=>0,'menu'=>1));
+            //$top_menus->orderBy('list_order', 'ASC'); 
         }else{
             //$role_resource=RoleResource::model()->join('LEFT JOIN','resource')->where(array('role_id'=>$_SESSION['role_id'],'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
             //$role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('`dt_role_resource`.role_id'=>5,'`dt_role_resource`.parent_id'=>0,'dt_role_resource.disabled'=>0,'dt_role_resource.menu'=>1))->all();
