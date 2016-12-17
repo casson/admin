@@ -42,9 +42,9 @@ class DefaultController extends EController
     //退出
     public function actionLogout()
     {
-        Yii::app()->session->clear(); 
-        Yii::app()->session->destroy(); 
-        $this->showMessage(Yii::t('admin','logout success'),'login');
+        Yii::$app->session->removeAll(); 
+        Yii::$app->session->destroy(); 
+        return $this->showMessage(Yii::t('admin','logout success'),'login');
     }
     
     //获取当前角色的一级菜单
@@ -55,11 +55,7 @@ class DefaultController extends EController
             $top_menus=Resource::findAll(array('parent_id'=>0,'disabled'=>0,'menu'=>1));
             //$top_menus->orderBy('list_order', 'ASC'); 
         }else{
-            //$role_resource=RoleResource::model()->join('LEFT JOIN','resource')->where(array('role_id'=>$_SESSION['role_id'],'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
-            //$role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('`dt_role_resource`.role_id'=>5,'`dt_role_resource`.parent_id'=>0,'dt_role_resource.disabled'=>0,'dt_role_resource.menu'=>1))->all();
             $role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('role_id'=>5,'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
-
-            print_r($role_resource);exit;
             foreach($role_resource as $o){
                 $top_menus[]=$o->resource;
             }
@@ -150,7 +146,7 @@ class DefaultController extends EController
                                 $url .= "/".str_replace("=","/",$evalresult);
                             }
                         }
-                        $url = Yii::app()->createUrl($url);                 
+                        $url = Yii::$app->createUrl($url);                 
                         $temp_current_pos = $current_pos.Yii::t('resource',$o->resource->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
                         $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->resource->name)."&nbsp;>&nbsp;";//更新当前位置信息
                         echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->resource->name)."</a></li>";
@@ -168,37 +164,37 @@ class DefaultController extends EController
     //锁屏功能  
     public function actionLockScreen()
     {
-        Yii::app()->session['admin_id']='';
-        Yii::app()->session['role_id']='';
+        Yii::$app->session['admin_id']='';
+        Yii::$app->session['role_id']='';
     }
     
     //解除屏幕锁定
     public function actionUnlockScreen()
     {
-        if(Yii::app()->session['wrong_time']>=9)//密码最多重试9次
+        if(Yii::$app->session['wrong_time']>=9)//密码最多重试9次
         {
             echo 3;
             exit;
         }
         $password = $_GET['lock_password'];
         
-        $admin = Admin::model()->find('user_name=:user_name',array(':user_name'=>Yii::app()->session['admin_name']));
+        $admin = Admin::model()->find('user_name=:user_name',array(':user_name'=>Yii::$app->session['admin_name']));
         if(password($password,$admin->encrypt)!=$admin->user_pwd)
         {
-            Yii::app()->session['wrong_time'] = Yii::app()->session['wrong_time']+1;
-            if(Yii::app()->session['wrong_time']>=9)//密码最多重试9次
+            Yii::$app->session['wrong_time'] = Yii::$app->session['wrong_time']+1;
+            if(Yii::$app->session['wrong_time']>=9)//密码最多重试9次
             {
                 echo 3;
                 exit;
             }
-            echo '2|'.(9-Yii::app()->session['wrong_time']);
+            echo '2|'.(9-Yii::$app->session['wrong_time']);
             exit;
         }
         else
         {
-            Yii::app()->session['wrong_time']=0;
-            Yii::app()->session['admin_id']=$admin->admin_id;
-            Yii::app()->session['role_id']=$admin->role_id;
+            Yii::$app->session['wrong_time']=0;
+            Yii::$app->session['admin_id']=$admin->admin_id;
+            Yii::$app->session['role_id']=$admin->role_id;
             echo 1;
             exit;
         }
@@ -225,9 +221,9 @@ class DefaultController extends EController
     public function actionError()
     {
 
-        if($error=Yii::app()->errorHandler->error)
+        if($error=Yii::$app->errorHandler->error)
         {
-            if(Yii::app()->request->isAjaxRequest)
+            if(Yii::$app->request->isAjaxRequest)
                 echo $error['message'];
             else
                 $this->renderPartial('//system/error', $error);
