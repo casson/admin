@@ -30,7 +30,8 @@ class LoginForm extends Model
 		);
 	}
 	
-	//字段标签
+    
+	//字段标签  test
 	public function attributeLabels()
 	{
 		return array(
@@ -71,7 +72,7 @@ class LoginForm extends Model
 		{
 			$this->addError('login_error',Yii::t('admin','disabled user'));
 			return false;
-		} 
+		}     
 		if(Util::password($this->user_pwd,$admin->encrypt)!=$admin->user_pwd)
 		{	
 			$this->addError('login_error','用户名和密码不对');
@@ -123,4 +124,5 @@ class LoginForm extends Model
 		
 		
 	}
+>>>>>>> d6feb1a390474ed5d4929bf3ca66f65149218459
 }

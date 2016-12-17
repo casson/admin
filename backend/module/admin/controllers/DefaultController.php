@@ -17,8 +17,8 @@ class DefaultController extends EController
     //后台管理首页
     public function actionIndex()
     { 
-        $this->_loginCheck();
-        $this->renderPartial('//system/index',array('top_menus'=>$this->getTopMenus()));    
+        $this->_loginCheck();   
+        $this->renderPartial('index',array('top_menus'=>$this->getTopMenus()));    
     }
 
     //登录
