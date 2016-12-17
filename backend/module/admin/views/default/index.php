@@ -142,10 +142,6 @@ function wSize(){
 		
 	}
 	
-	
-	
-	
-	
 }
 wSize();
 function windowW(){
