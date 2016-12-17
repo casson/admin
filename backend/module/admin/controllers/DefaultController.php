@@ -161,11 +161,11 @@ class DefaultController extends EController
         echo "</script>";
     }
     
-    //锁屏功能  
+    //锁屏功能
     public function actionLockScreen()
     {
         Yii::$app->session['admin_id']='';
-        Yii::$app->session['role_id']='';
+        Yii::$app->session['role_id'] ='';
     }
     
     //解除屏幕锁定
@@ -209,7 +209,6 @@ class DefaultController extends EController
                 Yii::$app->session->clear(); 
                 Yii::$app->session->destroy(); 
             }
-            //return $this->showMessage("登陆成功！",'index');
             return $this->showMessage("请重新登陆！",'login');
             //return $this->showMessage("请重新登陆！",'login','',array(),'','top');
         }
