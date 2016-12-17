@@ -69,15 +69,17 @@ class DefaultController extends EController
 
 
     //显示左侧菜单
-    public function actionLeftMenu(){
+    public function actionLeftmenu()
+    {
         $this->_loginCheck();
         $parent_id = intval($_GET['parent_id']);
-        $resource_info = Resource::model()->findByPk($parent_id);
+        //$resource_info = Resource::model()->findByPk($parent_id);
+        $resource_info = Resource::model()->findOne($parent_id);
         $current_pos = Yii::t('resource',$resource_info['name'])."&nbsp;>&nbsp;";//点击导航时获得的当前位置信息
         //获取二级菜单
                 
         if($_SESSION['role_id']==1){
-            $resource_list=Resource::model()->findAll(array('condition'=>'parent_id=:parent_id and disabled=:disabled  and menu=:menu','params'=>array(':parent_id'=>$parent_id,':disabled'=>0,'menu'=>1),'order'=>'list_order ASC,parent_id ASC'));    
+            $resource_list=Resource::findAll(array('parent_id'=>$parent_id,'disabled'=>0,'menu'=>1)); // ,'order'=>'list_order ASC,parent_id ASC'));    
             foreach($resource_list as $o)
             {
                 $class="left_title_up";
@@ -88,7 +90,7 @@ class DefaultController extends EController
                 }
                 echo "<div class='".$class."' onclick='switch_show(\"menu_".$o->resource_id."\",\"ul_".$o->resource_id."\")' id='menu_".$o->resource_id."'>".Yii::t('resource',$o->name)."</div>";
                 
-                $sub_resource_list=Resource::model()->findAll(array('condition'=>' parent_id=:parent_id and disabled=:disabled  and menu=:menu','params'=>array(':parent_id'=>$o->resource_id,':disabled'=>0,'menu'=>1),'order'=>'list_order ASC'));
+                $sub_resource_list=Resource::findAll(array('parent_id'=>$o->resource_id,'disabled'=>0,'menu'=>1)); //,'order'=>'list_order ASC'));
                 if(count($sub_resource_list)>0)
                 {
                     echo "<ul id='ul_".$o->resource_id."' style=\"".$cs."\" class='side'>";
@@ -109,7 +111,7 @@ class DefaultController extends EController
                                 $url .= "/".str_replace("=","/",$evalresult);
                             }
                         }
-                        $url = Yii::app()->createUrl($url);     
+                        $url = Yii::$app->urlManager->createAbsoluteUrl($url);     
                         $temp_current_pos = $current_pos.Yii::t('resource',$o->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
                         $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->name)."&nbsp;>&nbsp;";//更新当前位置信息
             
