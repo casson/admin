@@ -1,0 +1,63 @@
+<?php
+
+return array(
+		 
+		'user name'   =>'用户名：',
+		'user pwd'         =>'密&nbsp;&nbsp;&nbsp;码：', 
+		'check code' =>'验证码：',
+		'check code time out' =>'验证码超时！',
+		'incorrect check code' =>'验证码错误！',
+		'incorrect user name or password' =>'用户名或密码错误！',
+		'disabled user' =>'用户已被禁用！',
+		'invalid role,please contact manager' =>'角色已被禁用，请联系管理员！',
+		'successfully to logged in' =>'登录成功！',
+		'please login management panel'=>'请登录管理后台！',
+		'logout success'=>'安全退出！',
+		'please select version'=>'选择登录版本：',
+		'please select'=>'请选择',
+		'en_us'=>'英文',
+		'zh_cn'=>'中文', 
+		'help'=>'使用帮助',
+		'about'=>'关于',
+		'welcome'=>'欢迎您，',
+		'logout'=>'退出',
+		'canceled'=>'锁屏',
+		'lock_tips'=>'锁屏状态，请输入密码解锁',
+		'max_wrong_time'=>'密码重试次数太多',
+		'wrong password,you have'=>'密码错误，您还有',
+		'times left'=>'次尝试机会！',
+		'password can not be null'=>'密码不能为空。',
+		'lock_password'=>'密码：',
+		'lock_inits'=>'锁屏状态，请输入密码解锁',
+		'incorrect original pwd'=>'原密码错误',
+		'search'=>'搜索',
+		'status'=>'状态',
+		'wait'=>'<font color="#3399CC">?</font>',
+		'normal'=>'<font color="#ff0000">√</font>',
+		'disabled'=>'<font color="#3399CC">×</font>',
+		'manage_operation'=>'管理操作',
+		'id'=>'ID',
+		'select all'=>'全选',
+		'cancel'=>'取消',
+		'submit'=>'提交',
+		'be used'=>'已被占用',
+		'external link'   =>'外部链接',
+		'single page'     =>'单网页',
+		'internal category' =>'内部栏目', 
+		'visit'=>'访问',
+		'not_display_in_menu'              =>'未在导航中显示',
+		'no_record'=>'暂无数据',
+		'please_select_parent_category' => '≡ 作为一级栏目 ≡',
+		
+
+		'sotitle' =>  '关键字',
+		'samekey' =>  '同义词',
+		'sotype' =>  '类型',
+		'somg' =>  '管理操作',
+		'sotype1' =>  '全部',
+		'sotype2' =>  '知道',
+		
+		
+		
+
+);
