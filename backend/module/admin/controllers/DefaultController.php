@@ -16,7 +16,7 @@ class DefaultController extends EController
     public function actionIndex()
     { 
         $this->_loginCheck();   
-        $this->renderPartial('//system/index',array('top_menus'=>$this->getTopMenus()));    
+        $this->renderPartial('index',array('top_menus'=>$this->getTopMenus()));    
     }
 
     //登录
