@@ -1,5 +1,9 @@
 <?php
 
+namespace app\model;
+
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "{{resource}}".
  *
@@ -18,8 +22,11 @@
  * @property integer $list_order
  * @property integer $disabled
  */
-class Resource extends CActiveRecord
+class Resource extends ActiveRecord
 {
+
+	private static $_handler = null ;
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -27,24 +34,31 @@ class Resource extends CActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-		return parent::model($className);
+		if(is_null(self::$_handler))
+		{
+			self::$_handler = new self();
+		}
+		return self::$_handler;	
 	}
 
-		/* reset db */
-	public function getDbConnection()
-	{ 
-	  self::$db=Yii::app()->db;
-	  if(self::$db instanceof CDbConnection) return self::$db;
- 	 
-	}
+	/**
+	*@return String the connection of database
+	*/
+	public static function getDb()
+    {
+        // use the "db2" application component
+        return \Yii::$app->admin;  
+    }
 	
 	/**
 	 * @return string the associated database table name
 	 */
-	public function tableName()
+	public static function tableName()
 	{
-		return '{{resource}}';
+		return '{{%resource}}';
 	}
+
+	
 	public function scopes()
 	{
 		return array(

@@ -1,5 +1,9 @@
 <?php
 
+namespace app\model;
+
+use yii\db\ActiveRecord;
+
 /**
  * This is the model class for table "{{role_resource}}".
  *
@@ -8,8 +12,10 @@
  * @property integer $role_id
  * @property integer $resource_id
  */
-class RoleResource extends CActiveRecord
+class RoleResource extends ActiveRecord
 {
+	private static $_handler = null ;
+
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
@@ -17,17 +23,25 @@ class RoleResource extends CActiveRecord
 	 */
 	public static function model($className=__CLASS__)
 	{
-		 
-		return parent::model($className);
+		return self::find();
 	}
-
+		
 	/**
 	 * @return string the associated database table name
 	 */
-	public function tableName()
+	public static function tableName()
 	{
-		return '{{role_resource}}';
+		return '{{%role_resource}}';
 	}
+
+	/**
+	*@return String the connection of database
+	*/
+	public static function getDb()
+    {
+        // use the "db2" application component
+        return \Yii::$app->admin;  
+    }
 
 	/**
 	 * @return array validation rules for model attributes.

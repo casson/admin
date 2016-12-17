@@ -71,7 +71,7 @@ class LoginForm extends Model
 		{
 			$this->addError('login_error',Yii::t('admin','disabled user'));
 			return false;
-		}     
+		} 
 		if(Util::password($this->user_pwd,$admin->encrypt)!=$admin->user_pwd)
 		{	
 			$this->addError('login_error','用户名和密码不对');

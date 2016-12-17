@@ -5,6 +5,8 @@ namespace app\module\admin\controllers;
 use yii;
 use app\component\EController;
 use app\module\admin\model\LoginForm;
+use app\model\Resource;
+use app\model\RoleResource;
 
 /**
  * Default controller for the `admin` module
@@ -15,7 +17,7 @@ class DefaultController extends EController
     //后台管理首页
     public function actionIndex()
     { 
-        $this->_loginCheck();   
+        $this->_loginCheck();
         $this->renderPartial('//system/index',array('top_menus'=>$this->getTopMenus()));    
     }
 
@@ -33,7 +35,7 @@ class DefaultController extends EController
                     return $this->showMessage($model->getFirstError('login_error'));
                 }
             }
-            return $this->showMessage("登陆成功！",'admin/default/index');
+            return $this->showMessage("登陆成功！",'index');
         }
         return $this->renderPartial('login',array('model'=>$model));
     }
@@ -43,7 +45,7 @@ class DefaultController extends EController
     {
         Yii::app()->session->clear(); 
         Yii::app()->session->destroy(); 
-        $this->showMessage(Yii::t('admin','logout success'),'admin/default/login');
+        $this->showMessage(Yii::t('admin','logout success'),'login');
     }
     
     //获取当前角色的一级菜单
@@ -53,7 +55,11 @@ class DefaultController extends EController
         if($_SESSION['role_id']==1){
             $top_menus=Resource::model()->findAll(array('condition'=>' parent_id=:parent_id and disabled=:disabled  and menu=:menu','params'=>array(':parent_id'=>0,':disabled'=>0,'menu'=>1),'order'=>'list_order ASC'));
         }else{
-            $role_resource=RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:parent_id and resource.disabled=:disabled  and resource.menu=:menu','params'=>array(':role_id'=>$_SESSION['role_id'],':parent_id'=>0,':disabled'=>0,'menu'=>1),'order'=>'resource.list_order ASC'));
+            //$role_resource=RoleResource::model()->join('LEFT JOIN','resource')->where(array('role_id'=>$_SESSION['role_id'],'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
+            //$role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('`dt_role_resource`.role_id'=>5,'`dt_role_resource`.parent_id'=>0,'dt_role_resource.disabled'=>0,'dt_role_resource.menu'=>1))->all();
+            $role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('role_id'=>5,'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
+
+            print_r($role_resource);exit;
             foreach($role_resource as $o){
                 $top_menus[]=$o->resource;
             }
@@ -199,13 +205,15 @@ class DefaultController extends EController
     //判断管理员是否登录
     private function _loginCheck()
     {
-        if(!isset(Yii::$app->session['admin_id'])||empty(Yii::$app->session['admin_id'])||!isset(Yii::app()->session['role_id'])||empty(Yii::app()->session['role_id']))
+        if(!isset(Yii::$app->session['admin_id'])||empty(Yii::$app->session['admin_id'])||!isset(Yii::$app->session['role_id'])||empty(Yii::$app->session['role_id']))
         {
             if(Yii::$app->session['admin_name']!=''){
                 Yii::$app->session->clear(); 
                 Yii::$app->session->destroy(); 
             }
-            $this->showMessage('请重新登陆！','default/login.php','',array(),'','top');
+            //return $this->showMessage("登陆成功！",'index');
+            return $this->showMessage("请重新登陆！",'login');
+            //return $this->showMessage("请重新登陆！",'login','',array(),'','top');
         }
     }
 
