@@ -30,6 +30,9 @@ class LoginForm extends Model
 		);
 	}
 	
+    
+    
+    
 	//字段标签
 	public function attributeLabels()
 	{
