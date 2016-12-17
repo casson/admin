@@ -31,9 +31,7 @@ class LoginForm extends Model
 	}
 	
     
-    
-    
-	//字段标签
+	//字段标签  test
 	public function attributeLabels()
 	{
 		return array(
