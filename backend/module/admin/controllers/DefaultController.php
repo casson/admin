@@ -165,7 +165,7 @@ class DefaultController extends EController
         echo "</script>";
     }
     
-    //锁屏
+    //锁屏功能
     public function actionLockScreen()
     {
         Yii::app()->session['admin_id']='';
