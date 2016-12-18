@@ -111,7 +111,7 @@ class DefaultController extends EController
                         $temp_current_pos = $current_pos.Yii::t('resource',$o->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
                         $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->name)."&nbsp;>&nbsp;";//更新当前位置信息
             
-                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->name)."</a></li>";
+                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/admin/backend/web/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->name)."</a></li>";
                         unset($temp_current_pos);
                     }
                     echo "</ul>";
@@ -149,7 +149,7 @@ class DefaultController extends EController
                         $url = Yii::$app->createUrl($url);                 
                         $temp_current_pos = $current_pos.Yii::t('resource',$o->resource->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
                         $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->resource->name)."&nbsp;>&nbsp;";//更新当前位置信息
-                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->resource->name)."</a></li>";
+                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/admin/backend/web/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->resource->name)."</a></li>";
                         unset($temp_current_pos);
                     }
                     echo "</ul>";

@@ -50,21 +50,13 @@ class AjaxController extends Controller
 	{
 		if(intval($_GET['search_form_show'])==1)
 		{
-			Yii::app()->session['search_form_show']=1;
+			Yii::$app->session['search_form_show']=1;
 			
 		} else {
-			Yii::app()->session['search_form_show']=0;
+			Yii::$app->session['search_form_show']=0;
 		}
 		echo 1;
 		exit;
 	}
-
-	//公用测试控制器
-	public function actionTest()
-	{
-		echo Yii::$app->urlManager->createAbsoluteUrl('index');
-		echo "dddddd";
-	}
-
 	
 }
