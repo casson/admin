@@ -1,6 +1,5 @@
 function showFlashInfo(info,result)
 {  
-	
 	document.write('<div class=\"flash-'+result+'\">');
 	document.write(info);
 	document.write('</div>');
@@ -130,7 +129,7 @@ $(document).ready(function(){
 	
 		$(".search_trigger").toggle(
 		  function () {		
-			$.get("/ajax/searchform", {search_form_show:1}, function(data){
+			$.get("/admin/backend/web/ajax/searchform", {search_form_show:1}, function(data){
 			    if(data==1)
 			    {
 			    	$('.list_search_form').show();
@@ -139,7 +138,7 @@ $(document).ready(function(){
 		  },
 		  function () {
 				
-				$.get("/ajax/searchform", {search_form_show:0}, function(data){
+				$.get("/admin/backend/web/ajax/searchform", {search_form_show:0}, function(data){
 				    if(data==1)
 				    {
 				    	$('.list_search_form').hide();
@@ -155,7 +154,7 @@ $(document).ready(function(){
 		  
 		  function () {
 				
-				$.get("/ajax/searchform", {search_form_show:0}, function(data){
+				$.get("/admin/backend/web/ajax/searchform", {search_form_show:0}, function(data){
 				    if(data==1)
 				    {
 				    	$('.list_search_form').hide();
@@ -163,7 +162,7 @@ $(document).ready(function(){
 			 	}); 
 			  },
 		  function () {		
-				$.get("/ajax/searchform", {search_form_show:1}, function(data){
+				$.get("/admin/backend/web/ajax/searchform", {search_form_show:1}, function(data){
 			    if(data==1)
 			    {
 			    	$('.list_search_form').show();
@@ -246,13 +245,11 @@ function initCheckBoxList()
 {
 	var id_list = new Array();	
 	$(".list_check").each(function(){
-										if(this.checked==true)
-										{
-											id_list[id_list.length] = this.value;
-										}
-												
-									}
-						);	
+		if(this.checked==true)
+		{
+			id_list[id_list.length] = this.value;
+		}
+	});	
 	
 	id_list = id_list.join(",");
 	
