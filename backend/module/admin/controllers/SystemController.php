@@ -3,6 +3,8 @@ namespace app\module\admin\controllers;
 
 use yii;
 use app\component\EController;
+use app\model\Admin;
+use app\module\admin\model\AccountSettingForm;
 
 class SystemController extends EController
 {
@@ -19,8 +21,8 @@ class SystemController extends EController
 	
 	//系统起始
 	public function actionStart()
-	{						
-		return $this->renderPartial('//system/start');
+	{				
+		return $this->renderPartial('start');
 	}
 	
 	
@@ -28,7 +30,7 @@ class SystemController extends EController
 	public function actionChangePassword()
 	{	
 		$this -> layout = 'main' ;
-		$admin= Admin::model()->find(array('condition'=>"admin_id=".Yii::app()->session['admin_id'].""));
+		$admin= Admin::find(array("admin_id"=>Yii::app()->session['admin_id']));
 		$model = new ChangePasswordForm;	
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
             echo CActiveForm::validate($model);
@@ -60,10 +62,10 @@ class SystemController extends EController
 	
 	
 	//账号设置
-	public function actionAccountSetting()
+	public function actionAccountsetting()
 	{
 		$this -> layout = 'main' ;
-		$admin= Admin::model()->find(array('condition'=>"admin_id=".Yii::app()->session['admin_id'].""));
+		$admin= Admin::find(array("admin_id"=>Yii::$app->session['admin_id']));
 		$model = new AccountSettingForm;
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
