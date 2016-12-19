@@ -6,3 +6,5 @@
 *.exe  
 *.o  
 *.so
+*.DS_Store
+.DS_Store
