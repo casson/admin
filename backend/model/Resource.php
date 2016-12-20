@@ -57,7 +57,17 @@ class Resource extends ActiveRecord
 	{
 		return '{{%resource}}';
 	}
-
+    
+    
+    public function list_order_asc()
+    {
+        return $this->orderBy('list_order ASC');    
+    }
+    
+    public function parent_order_asc()
+    {
+        return $this->orderBy('parent_id ASC');
+    }
 	
 	public function scopes()
 	{

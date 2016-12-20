@@ -3,24 +3,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title></title>
-<link rel="icon" href="<?php echo Yii::app()->request->baseUrl; ?>/images/admin_img/favicon.ico" type="image/x-icon" />
-<link type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/<?php echo Yii::app()->language; ?>_admin.css"  rel="stylesheet" />
-<?php   Yii::app()->clientScript->registerCoreScript('jquery'); ?>
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/admin.js"></script>
+<link rel="icon" href="<?php echo Yii::$app->request->baseUrl; ?>/images/admin_img/favicon.ico" type="image/x-icon" />
+<link type="text/css" href="<?php echo Yii::$app->request->baseUrl; ?>/public/css/<?php echo Yii::$app->language; ?>_admin.css"  rel="stylesheet" />
+<?php $this->registerJsFile("/js/jquery/jquery.js");?>
+<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/js/admin.js"></script>
 </head>
 <body class="right_body">
 	<div class="body">
-	<?php if(Yii::app()->user->hasFlash('success')): ?>
+	<?php if(Yii::$app->session->hasFlash('success')): ?>
 		<script type="text/javascript">
-		showFlashInfo('<?php echo Yii::app()->user->getFlash('success'); ?>','success');
+		showFlashInfo('<?php echo Yii::$app->session->getFlash('success'); ?>','success');
 		</script>
 	<?php endif; ?>
-	<?php if(Yii::app()->user->hasFlash('failed')): ?>
+	<?php if(Yii::$app->session->hasFlash('failed')): ?>
 		<script type="text/javascript">
-		showFlashInfo('<?php echo Yii::app()->user->getFlash('failed'); ?>','failed');
+		showFlashInfo('<?php echo Yii::$app->session->getFlash('failed'); ?>','failed');
 		</script>
-	<?php endif; ?>
-	<div class="action_menu" ><ul><?php echo ActionMenuHelper::getListTopMenu($this->son_menu);?></ul></div>
+	<?php endif; ?>  
+	<div class="action_menu" ><ul><?php echo \app\component\ActionMenuHelper::getListTopMenu(Yii::$app->controller->son_menu);?></ul></div>
 	<?php echo $content; ?>
 	</div>
 </body>

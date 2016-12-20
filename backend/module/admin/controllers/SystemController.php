@@ -65,7 +65,7 @@ class SystemController extends EController
 	public function actionAccountsetting()
 	{
 		$this -> layout = 'main' ;
-		$admin= Admin::find(array("admin_id"=>Yii::$app->session['admin_id']));
+		$admin= Admin::find(array("admin_id"=>Yii::$app->session['admin_id']))->one();
 		$model = new AccountSettingForm;
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
@@ -78,7 +78,6 @@ class SystemController extends EController
 			$model->attributes=$_POST['AccountSettingForm'];
 			if($model->validate())
 			{	
-				echo "dddd";exit;
 				$admin->attributes=$_POST['AccountSettingForm'];			
 				if($admin->save())
 				{		
@@ -90,7 +89,7 @@ class SystemController extends EController
 				}
 			}	
 		}
-		$this->render('accountsetting',array('model'=>$model,'admin'=>$admin));
+		return $this->render('accountsetting',array('model'=>$model,'admin'=>$admin));
 	}
 	
 	

@@ -22,13 +22,11 @@
 				<td width="80"><?php echo $form->field($model,'last_login_ip');?></td> 
 				<td><?php echo Yii::$app->session['last_login_ip'];?></td>
 				</tr>
-				
+                
 				<tr>
 				<td><?php echo $form->field($model,'real_name');?></td>
 				<td>
-				<?php echo Html::activeTextInput($model,'real_name', array('class'=>'text','value'=>$admin->real_name)); ?>
-				<?php echo $form->error($model,'real_name'); ?>
-				
+                    <?php echo $admin->real_name; ?>
 				</td>
 				</tr> 
 	 

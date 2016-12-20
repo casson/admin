@@ -1,0 +1,471 @@
+<?php
+class ActionMenuHelper {
+	private function __init(){
+		
+	}
+	private function __clone(){
+		
+	}
+	/**
+	* 获取操作
+	* param boolean $isShow
+	* param boolean $at_bottom
+	* return arr $menu_list
+	*/
+	private static function getActionMenu($isShow=true,$at_bottom){
+		$isMenu = ($isShow == true)? '1':'0';
+		
+		$controller = Yii::app()->controller->id;
+		
+		 
+		$action = Yii::app()->controller->getAction()->getId();
+		$module = Yii::app()->controller->getModule()->getId();
+		
+		
+ 		$resource = Resource::model()->find(array('condition'=>'module=:module and controller=:controller and action=:action','params'=>array(':module'=>$module,':controller'=>$controller,':action'=>$action),'order'=>'resource_id ASC'));
+		 
+ 	  
+		
+		if(Yii::app()->session['role_id']==1)
+		{
+			$menu_list = Resource::model()->findAll(array('condition'=>'parent_id=:resource_id and menu='.$isMenu.' and disabled=0 and at_bottom='.$at_bottom.'','params'=>array(':resource_id'=>$resource->resource_id),'order'=>'list_order ASC'));
+			
+		}
+		else
+		{
+			$menu_list=RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:resource_id and resource.menu='.$isMenu.' and resource.disabled=0 and resource.at_bottom='.$at_bottom.'','params'=>array(':role_id'=>Yii::app()->session['role_id'],':resource_id'=>$resource->resource_id),'order'=>'resource.list_order ASC'));
+			
+		}
+		
+		return $menu_list;
+	}
+	
+	//获取列表页单挑记录操作菜单
+	public static function getHiddenMenu($at_bottom=0)
+	{
+		dataselect::selectBs("db");
+		 
+		
+		$result = array();
+		$actionList = self::getActionMenu(false,$at_bottom);
+		
+		//$controller = Yii::app()->controller->id;
+		//$action = Yii::app()->controller->getAction()->getId();
+		//$module = Yii::app()->controller->getModule()->getId();
+		foreach($actionList as $o){
+			$tmpAction = array();
+			if(Yii::app()->session['role_id']!=1)
+			{
+				$action = $o->resource;
+			}
+			else
+			{
+				$action=$o;
+			}
+			
+			$actionName = trim(strtolower($action->action));
+			$tmpAction['url'] 	 =  Yii::app()->createUrl($action->module.'/'.$action->controller.'/'.$action->action.'/');
+			$tmpAction['actionName'] = Yii::t('resource',$action->name);
+			$tmpAction['action'] = $action->action;
+			$tmpAction['actionModel']  = $action;
+			$tmpAction['btn_class'] = $action->btn_class;
+			$tmpAction['show_function'] = $action->show_function;
+			$tmpAction['name_function'] = $action->name_function;
+			$tmpAction['data'] = $action->data;
+			$tmpAction['title_field'] = $action->title_field;
+			$result[] = $tmpAction;
+		}
+		return $result;
+	}
+	//重建url
+	public static function reCreateUrl($actionModel,$url){
+		return Yii::app()->createUrl($actionModel->module.'/'.$actionModel->controller.'/'.$actionModel->action.'/'.$url);
+	}
+	
+	
+	//获取列表头菜单
+	public static function getListTopMenu($son_menu=1)
+	{
+		dataselect::selectBs("db");
+		$controller = Yii::app()->controller->id;
+		$action = Yii::app()->controller->getAction()->getId();
+		$module = Yii::app()->controller->getModule()->getId();
+		$resource = Resource::model()->list_order_asc()->find('module=:module and controller=:controller and action=:action and disabled=0',array(':module'=>$module,':controller'=>$controller,':action'=>$action));
+		if($son_menu==1)
+		{
+			$menu_list = Resource::model()->list_order_asc()->parent_order_asc()->findAll('resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\'))',array(':parent_id'=>$resource->parent_id));
+			
+			
+		}
+		else
+		{
+			$menu_list = Resource::model()->list_order_asc()->parent_order_asc()->findAll('resource_id=:resource_id or parent_id=:resource_id and menu=1 and disabled=0',array(':resource_id'=>$resource->resource_id));
+		}
+		$now_url = Yii::app()->request->getUrl();
+		foreach($menu_list as $o)
+		{
+			if(Yii::app()->session['role_id']!=1)
+			{
+				$obj = RoleResource::model()->find("role_id=".Yii::app()->session['role_id']." and resource_id=".$o->resource_id."");
+				if(empty($obj)) 
+				{
+					continue;
+				}
+			}
+			
+			
+			$url = $o->module.'/'.$o->controller.'/'.$o->action;
+			if($o->data!='')
+			{
+				 $evalphp = $o->data;
+				 if(@eval("$evalphp;")==false)
+				 {
+				 	 $url .= "/".str_replace("=","/",$evalphp);
+				 }
+				 else
+				 {
+					 $evalresult = @eval("$evalphp;");
+					 if(preg_match('/\=$/',$evalresult))
+					 {
+					 	
+						$url='';
+					 }
+					 else if(preg_match('/\=\&/',$evalresult))
+					 {
+						$url='';
+					 }
+					 else
+					 {
+					 	 $url .= "/".str_replace("=","/",$evalresult);
+					 }
+					
+				 }
+			}
+			//其他可能参数
+			if(isset($_GET['module'])&&$_GET['module']!='')
+			{
+				$url .= "/module/".$_GET['module'];
+			}
+			if(isset($_GET['parent_id'])&&$_GET['parent_id']!='')
+			{
+				$url .= "/parent_id/".intval($_GET['parent_id']);
+			}
+			$url = Yii::app()->createUrl($url);
+			
+			$class_str='';
+			if(strtolower($module)==strtolower($o->module)&&strtolower($controller)==strtolower($o->controller)&&strtolower($action)==strtolower($o->action))
+			{
+			
+					if($url==$now_url||$o->data=='')
+					{
+						$class_str="class='on'";
+						$url = 'javascript:void(0)';
+					}
+			}
+			
+			$str.= "<li ".$class_str."><a href='".$url."' class='".$o->btn_class."' >".Yii::t('resource',$o->name)."</a></li>";
+		
+		}
+		
+		
+		return $str;
+	}
+	//处理列表底部操作
+	public static function ProcessBtActList($bt_act_list)
+	{
+		foreach($bt_act_list as $a){
+			echo "<a href='".$a['url']."'   class='".$a['btn_class']."'>".Yii::t('base',$a['actionName'])."</a>";
+			
+		};
+	}
+	//处理列表底部操作
+	public static function getProcessBtActList($bt_act_list)
+	{
+		if(empty($bt_act_list))return '';
+		$str='<div  class=\'bt_act\'>';
+		foreach($bt_act_list as $a){
+			$str.= "<a href='".$a['url']."'   class='".$a['btn_class']."'>".Yii::t('base',$a['actionName'])."</a>";
+			
+		};
+		return $str."</div>";
+	}
+	/**处理列表对应操作
+	*@ $o 对应记录
+	*@ $act_list 操作列表
+	*@ $key_field 记录主键
+	*@ $art_name  传递主键值的键名，默认为id
+	*@ $title_field 记录标题字段名称
+	*/
+	public static function  ProcessActList($o,$act_list,$key_field,$arg_name='id')
+	{
+		$i=0;
+		foreach($act_list as $a){
+			$url_data='';
+			$data = $a['data'];
+			if($data!='')
+			{	
+				if(@eval("$data;")==false)
+				 {
+				 	 $url_data = "/".str_replace("=","/",$data);
+					
+				 }
+				 else
+				 {
+				 	 
+					 $evalresult = @eval("$data;");
+					 if(preg_match('/\=$/',$evalresult))
+					 {
+					 	
+						$url_data='';
+					 }
+					 else if(preg_match('/\=\&/',$evalresult))
+					 {
+						$url_data='';
+					 }
+					 else
+					 {
+					 	 $url_data = "/".str_replace("=","/",$evalresult);
+					 }
+					
+					
+				 }
+			}
+			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."/".$o->$key_field.$url_data);
+			//转换操作名称
+			$namephp = $a['name_function'];
+			if(!empty($namephp))
+			{
+				$action_name = eval("$namephp;");
+			}
+			else
+			{
+				$action_name = Yii::t('base',$a['actionName']);
+			}
+			
+			
+			
+			//用于判断操作是否可用
+			$evalphp = $a['show_function'];
+			$title_field =$a['title_field'];
+			 if($evalphp=='')
+			 {
+			 	if($title_field!='')
+				{
+					echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.$o->$title_field."』')\" class='with_title'>".$action_name."</a>";
+				}
+				else
+				{
+					echo "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
+				}
+			 }
+			 else
+			 {
+				if(@eval("$evalphp;")==true)
+				 {
+					if($title_field!='')
+					{
+						
+						echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
+					}
+					else
+					{
+						echo "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
+					}
+				 }
+				 else
+				 {
+					echo "<font color='#ccc'>".$action_name."</font>";	
+				 }
+			 }
+								
+			if($i<(count($act_list)-1))
+			{
+				echo " | ";
+			}
+			$i++;
+		};
+	}
+	
+	
+	
+	/**处理列表对应操作
+	*@ $o 对应记录
+	*@ $act_list 操作列表
+	*@ $key_field 记录主键
+	*@ $art_name  传递主键值的键名，默认为id
+	*@ $title_field 记录标题字段名称
+	*/
+	public static function  getProcessActList($o,$act_list,$key_field,$arg_name='id')
+	{
+		$str='';
+		$i=0;
+		foreach($act_list as $a){
+			$url_data='';
+			$data = $a['data'];
+			if($data!='')
+			{	
+				if(@eval("$data;")==false)
+				 {
+				 	 $url_data = "/".str_replace("=","/",$data);
+					
+				 }
+				 else
+				 {
+				 	 
+					 $evalresult = @eval("$data;");
+					 if(preg_match('/\=$/',$evalresult))
+					 {
+					 	
+						$url_data='';
+					 }
+					 else if(preg_match('/\=\&/',$evalresult))
+					 {
+						$url_data='';
+					 }
+					 else
+					 {
+					 	 $url_data = "/".str_replace("=","/",$evalresult);
+					 }
+					
+					
+				 }
+			}
+			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."/".$o->$key_field.$url_data);
+			//转换操作名称
+			$namephp = $a['name_function'];
+			if(!empty($namephp))
+			{
+				$action_name = eval("$namephp;");
+			}
+			else
+			{
+				$action_name = Yii::t('base',$a['actionName']);
+			}
+			//用于判断操作是否可用
+			$evalphp = $a['show_function'];
+			$title_field =$a['title_field'];
+			 if($evalphp=='')
+			 {
+			 	if($title_field!='')
+				{
+					$str.= "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.$o->$title_field."』')\" class='with_title'>".$action_name."</a>";
+				}
+				else
+				{
+					$str.= "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
+				}
+			 }
+			 else
+			 {
+				if(@eval("$evalphp;")==true)
+				 {
+					if($title_field!='')
+					{
+						
+						$str.= "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
+					}
+					else
+					{
+						$str.= "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
+					}
+				 }
+				 else
+				 {
+					$str.= "<font color='#ccc'>".$action_name."</font>";	
+				 }
+			 }
+								
+			if($i<(count($act_list)-1))
+			{
+				$str.= " | ";
+			}
+			$i++;
+		};
+		return $str;
+	}
+	
+}
+	
+	
+	
+
+//操作名切换
+function open_switch($open)
+{
+	if($open==1)
+	{
+		return Yii::t('resource','set_close');
+	}
+	else
+	{
+		return Yii::t('resource','set_open');
+	}	
+}
+//操作名切换
+function hot_switch($hot)
+{
+	if($hot==1)
+	{
+		return Yii::t('resource','unset_hot');
+	}
+	else
+	{
+		return Yii::t('resource','set_hot');
+	}	
+}
+function not_forbid_fields($field)
+{
+	$forbid_fields = Yii::app()->params['fields']['forbid_fields'];
+	if(!in_array($field,$forbid_fields))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
+	
+}
+function not_forbid_delete($field)
+{
+	$forbid_delete = Yii::app()->params['fields']['forbid_delete'];
+	if(!in_array($field,$forbid_delete))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
+	
+}
+//判断是否为超级管理员
+function not_super_admin($id)
+{
+	
+	if($id!=1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
+	
+}
+//判断是否为超级管理员
+function has_sub($parent_id)
+{
+	$link_list = Linkmenu::model()->findAll('key_id=:key_id or parent_id=:parent_id',array(':key_id'=>$parent_id,':parent_id'=>$parent_id));
+	
+	if(!empty($link_list))//有子级
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}	
+	
+}
+?>
