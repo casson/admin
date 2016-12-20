@@ -5,6 +5,7 @@ use yii;
 use app\component\EController;
 use app\model\Admin;
 use app\module\admin\model\AccountSettingForm;
+use app\module\admin\model\ChangePasswordForm;
 
 class SystemController extends EController
 {
@@ -27,14 +28,14 @@ class SystemController extends EController
 	
 	
 	//修改密码
-	public function actionChangePassword()
+	public function actionChangepassword()
 	{	
 		$this -> layout = 'main' ;
-		$admin= Admin::find(array("admin_id"=>Yii::app()->session['admin_id']));
+		$admin= Admin::find(array("admin_id"=>Yii::$app->session['admin_id']));
 		$model = new ChangePasswordForm;	
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
             echo CActiveForm::validate($model);
-            Yii::app()->end();
+            Yii::$app->end();
         }
 		
 		if(isset($_POST['ChangePasswordForm']))
@@ -57,7 +58,7 @@ class SystemController extends EController
 				}
 			}	
 		}	
-		$this->render('changepassword',array('model'=>$model,'admin'=>$admin));
+		return $this->render('changepassword',array('model'=>$model,'admin'=>$admin));
 	}
 	
 	
@@ -65,6 +66,7 @@ class SystemController extends EController
 	public function actionAccountsetting()
 	{
 		$this -> layout = 'main' ;
+		$this->son_menu = 1;
 		$admin= Admin::find(array("admin_id"=>Yii::$app->session['admin_id']))->one();
 		$model = new AccountSettingForm;
 		//ajax 验证
@@ -89,10 +91,6 @@ class SystemController extends EController
 				}
 			}	
 		}
-		print_r($admin->real_name);
 		return $this->render('accountsetting',array('model'=>$model,'admin'=>$admin));
-	}
-	
-	
-	
+	}	
 }

@@ -1,6 +1,11 @@
 <?php
 
-class ChangePasswordForm extends CFormModel
+namespace app\module\admin\model; 
+
+use yii;
+use yii\base\Model;
+
+class ChangePasswordForm extends Model
 {
 	public $new_pwd;
 	public $original_pwd;
@@ -11,9 +16,9 @@ class ChangePasswordForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('new_pwd,retype_pwd,original_pwd', 'required'),
-			array('new_pwd,retype_pwd', 'match','pattern'=>'/^[\w\_]{6,20}$/'),
-			array('retype_pwd', 'compare', 'compareAttribute'=>'new_pwd'),
+			//array('new_pwd,retype_pwd,original_pwd', 'required'),
+			//array('new_pwd,retype_pwd', 'match','pattern'=>'/^[\w\_]{6,20}$/'),
+			//array('retype_pwd', 'compare', 'compareAttribute'=>'new_pwd'),
 		);
 	}
 	//字段标签
