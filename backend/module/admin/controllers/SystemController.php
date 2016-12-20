@@ -89,6 +89,7 @@ class SystemController extends EController
 				}
 			}	
 		}
+		print_r($admin->real_name);
 		return $this->render('accountsetting',array('model'=>$model,'admin'=>$admin));
 	}
 	
