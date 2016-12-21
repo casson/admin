@@ -21,25 +21,19 @@ class ActionMenuHelper
 	*/
 	private static function getActionMenu($isShow=true,$at_bottom){
 		$isMenu = ($isShow == true)? '1':'0';
-		
 		$controller = Yii::$app->controller->id; 
-		$action = Yii::$app->controller->getAction()->getId();
-		$module = Yii::$app->controller->getModule()->getId();
-
- 		$resource = Resource::model()->find(array('condition'=>'module=:module and controller=:controller and action=:action','params'=>array(':module'=>$module,':controller'=>$controller,':action'=>$action),'order'=>'resource_id ASC'));		
+		$action = Yii::$app->controller->action->id;
+		$module = Yii::$app->controller->module->id;
+		$resource = Resource::find(array('module'=>$module, 'controller'=>$controller, 'action'=>$action))->one(); //,'order'=>'resource_id ASC'));		
 		if(Yii::$app->session['role_id']==1)
 		{
-			$menu_list = Resource::model()->findAll(array('condition'=>'parent_id=:resource_id and menu='.$isMenu.' and disabled=0 and at_bottom='.$at_bottom.'','params'=>array(':resource_id'=>$resource->resource_id),'order'=>'list_order ASC'));
-			
+			$menu_list = Resource::findAll(array('resource_id'=>$resource->resource_id, 'menu'=>$isMenu, 'disabled'=>0, 'at_bottom'=>$at_bottom));  //,'order'=>'list_order ASC'));
+		} else {
+			$menu_list = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:resource_id and resource.menu='.$isMenu.' and resource.disabled=0 and resource.at_bottom='.$at_bottom.'','params'=>array(':role_id'=>Yii::$app->session['role_id'],':resource_id'=>$resource->resource_id),'order'=>'resource.list_order ASC'));			
 		}
-		else
-		{
-			$menu_list=RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:resource_id and resource.menu='.$isMenu.' and resource.disabled=0 and resource.at_bottom='.$at_bottom.'','params'=>array(':role_id'=>Yii::$app->session['role_id'],':resource_id'=>$resource->resource_id),'order'=>'resource.list_order ASC'));
-			
-		}
-		
 		return $menu_list;
 	}
+
 	
 	//获取列表页单挑记录操作菜单
 	public static function getHiddenMenu($at_bottom=0)

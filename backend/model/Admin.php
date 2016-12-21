@@ -2,9 +2,10 @@
 
 namespace app\model;
 
+use yii;
 use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
 use app\model\Role;
-
 /**
  * This is the model class for table "{{admin}}".
  *
@@ -98,14 +99,19 @@ class Admin extends ActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-		$criteria=new CDbCriteria;
+		$criteria= Admin::find();
+		/**
 		$criteria->with = array('role');
 		$criteria->compare('user_name',$this->user_name,true);
 		$criteria->compare('real_name',$this->real_name,true);
 		$criteria->compare('t.role_id',$this->role_id); 
 		$criteria->compare('disabled',$this->disabled);
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+		**/
+		return new ActiveDataProvider( array(
+			'query'=> $criteria,
+			'pagination' => array(
+		        'pageSize' => 20
+		    )
 		));
 	}
 	//返回语言

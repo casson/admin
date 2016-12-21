@@ -4,6 +4,7 @@ namespace app\component;
 
 use yii;
 use yii\web\Controller;
+use yii\widgets\ListView;
 use app\component\CHttpRequest;
 
 /**
@@ -67,13 +68,13 @@ class EController extends Controller
 	{
 		//列表
 			
-		$this->widget('zii.widgets.CListView', array(
+		return ListView::widget(array(
 		
 				'dataProvider'=>$this->dataProvider,
-				'itemView'=>$view_file,
-				'viewData'=>array('act_list'=>$this->act_list),
-				'ajaxUpdate'=>false,//设置列表页是否ajax刷新
-				'template'=>'<div class="sorter">{sorter}</div>'.$this->list_table_start.'{items}'.$this->list_table_end.$this->bt_act_str.'<div class="page">{pager}<p>{summary}</p></div>',
+				'view'=>$view_file,
+				'itemView'=>array('act_list'=>$this->act_list),
+				//'ajaxUpdate'=>false,//设置列表页是否ajax刷新
+				'layout'=>'<div class="sorter">{sorter}</div>'.$this->list_table_start.'{items}'.$this->list_table_end.$this->bt_act_str.'<div class="page">{pager}<p>{summary}</p></div>',
 				'summaryCssClass'=>'summary_container',//定义summary的div容器的class
 			
 				'summaryText'=>''.Yii::t('pager','total').'{count}'.Yii::t('pager','records').'，'.Yii::t('pager','current').'{page}/{pages}'.Yii::t('pager','page').'',
