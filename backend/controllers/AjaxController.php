@@ -44,7 +44,7 @@ class AjaxController extends Controller
 		
 	
 	}
-	
+
 	//控制搜索框显示状态
 	public function actionSearchform()
 	{

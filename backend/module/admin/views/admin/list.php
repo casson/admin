@@ -41,6 +41,6 @@
 		</tr>';
 		$controller->list_table_end = '</tbody></table></div>';
 	}
-	$controller->showList('_member_view');
+	echo $controller->showList('_member_view');
 ?>
 <?php ActiveForm::end(); ?>

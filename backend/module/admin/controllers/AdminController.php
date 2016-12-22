@@ -30,10 +30,10 @@ class AdminController extends EController
 		//$model=new Admin('search'); 
 		$model=new Admin();  	 
 		//send model object for search
-		$this->render('list',array(
-			'dataProvider'=>$model->search(),
-			'act_list'=>$act_list)
-		); 
+		return  $this->render('list',array(
+                    'dataProvider'=>$model->search(),
+                    'act_list'=>$act_list
+                )); 
 	}
 	
 	//添加管理员

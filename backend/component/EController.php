@@ -67,12 +67,15 @@ class EController extends Controller
 	public function showList($view_file='_view')
 	{
 		//列表
-			
 		return ListView::widget(array(
 		
 				'dataProvider'=>$this->dataProvider,
-				'view'=>$view_file,
-				'itemView'=>array('act_list'=>$this->act_list),
+				'itemView'=>$view_file,
+                'viewParams'=>array('act_list'=>$this->act_list),
+                'layout'=>'<div class="sorter"></div>'.$this->list_table_start.'{items}'.$this->list_table_end.$this->bt_act_str.'<div class="page">{pager}<p>{summary}</p></div>',
+				
+				/**
+                //'itemView'=>array('act_list'=>$this->act_list),
 				//'ajaxUpdate'=>false,//设置列表页是否ajax刷新
 				'layout'=>'<div class="sorter">{sorter}</div>'.$this->list_table_start.'{items}'.$this->list_table_end.$this->bt_act_str.'<div class="page">{pager}<p>{summary}</p></div>',
 				'summaryCssClass'=>'summary_container',//定义summary的div容器的class
@@ -105,7 +108,8 @@ class EController extends Controller
 					'nextPageCssClass'=>'pg_next',
 					'previousPageCssClass'=>'pg_last',
 					'maxButtonCount'=>7, //最大按钮数		   
-				),
+				)
+                **/
 		));
 	
 	}

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo Yii::t('system', 'app name')."-".Yii::t('system', 'description');?></title> 
 <link type="text/css" href="<?php echo Yii::$app->request->baseUrl; ?>/public/css/<?php echo Yii::$app->language; ?>_admin.css"  rel="stylesheet" />
-<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/jquery.js"></script>
 
 <!-- artdialog start-->
 <script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/art_dialog/artDialog.source.js?skin=wzcms"></script>

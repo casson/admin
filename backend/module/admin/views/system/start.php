@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo Yii::t('system', 'app name')."-".Yii::t('system', 'description');?></title>
 <link type="text/css" href="<?php echo Yii::$app->request->baseUrl; ?>/public/css/zh-CN_admin.css"  rel="stylesheet" />
-<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/jquery.js"></script>
 </head>
 <body class="right_body"  >
 	<div class="body">

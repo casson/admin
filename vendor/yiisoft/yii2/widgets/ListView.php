@@ -102,7 +102,7 @@ class ListView extends BaseListView
             $content = call_user_func($this->itemView, $model, $key, $index, $this);
         }
         $options = $this->itemOptions;
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        $tag = ArrayHelper::remove($options, 'tag', 'span');
         $options['data-key'] = is_array($key) ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : (string) $key;
 
         return Html::tag($tag, $content, $options);

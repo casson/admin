@@ -35,18 +35,19 @@ class ActionMenuHelper
 	}
 
 	
-	//获取列表页单挑记录操作菜单
-	public static function getHiddenMenu($at_bottom=0)
+	/**
+     *获取列表页单条记录操作菜单
+     *
+     *@param int $at_bottom
+     *           是否是底部操作按钮
+     *@return Array
+     */
+    public static function getHiddenMenu($at_bottom=0)
 	{
-		dataselect::selectBs("db");
-		 
+		dataselect::selectBs("db"); 
 		
 		$result = array();
-		$actionList = self::getActionMenu(false,$at_bottom);
-		
-		//$controller = Yii::$app->controller->id;
-		//$action = Yii::$app->controller->getAction()->getId();
-		//$module = Yii::$app->controller->getModule()->getId();
+		$actionList = self::getActionMenu(true,$at_bottom);
 		foreach($actionList as $o){
 			$tmpAction = array();
 			if(Yii::$app->session['role_id']!=1)
@@ -59,7 +60,7 @@ class ActionMenuHelper
 			}
 			
 			$actionName = trim(strtolower($action->action));
-			$tmpAction['url'] 	 =  Yii::$app->createUrl($action->module.'/'.$action->controller.'/'.$action->action.'/');
+			$tmpAction['url'] 	 =  Yii::$app->urlManager->createAbsoluteUrl($action->module.'/'.$action->controller.'/'.$action->action.'/');
 			$tmpAction['actionName'] = Yii::t('resource',$action->name);
 			$tmpAction['action'] = $action->action;
 			$tmpAction['actionModel']  = $action;
@@ -72,9 +73,11 @@ class ActionMenuHelper
 		}
 		return $result;
 	}
+    
+    
 	//重建url
 	public static function reCreateUrl($actionModel,$url){
-		return Yii::$app->createUrl($actionModel->module.'/'.$actionModel->controller.'/'.$actionModel->action.'/'.$url);
+		return Yii::$app->urlManager->createAbsoluteUrl($actionModel->module.'/'.$actionModel->controller.'/'.$actionModel->action.'/'.$url);
 	}
 	
 	
@@ -198,90 +201,64 @@ class ActionMenuHelper
 			if($data!='')
 			{	
 				if(@eval("$data;")==false)
-				 {
-				 	 $url_data = "/".str_replace("=","/",$data);
-					
-				 }
-				 else
-				 {
-				 	 
-					 $evalresult = @eval("$data;");
-					 if(preg_match('/\=$/',$evalresult))
-					 {
-					 	
-						$url_data='';
-					 }
-					 else if(preg_match('/\=\&/',$evalresult))
-					 {
-						$url_data='';
-					 }
-					 else
-					 {
-					 	 $url_data = "/".str_replace("=","/",$evalresult);
-					 }
-					
-					
-				 }
+                {
+                    $url_data = "/".str_replace("=","/",$data);
+                } else {				 	 
+                    $evalresult = @eval("$data;");
+                    if(preg_match('/\=$/',$evalresult))
+                    {
+                        $url_data='';
+                    } else if(preg_match('/\=\&/',$evalresult)) {
+                        $url_data='';
+                    } else {
+                        $url_data = "/".str_replace("=","/",$evalresult);
+                    }
+                }
 			}
 			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."/".$o->$key_field.$url_data);
-	  
-		
-			
 			//转换操作名称
 			$namephp = $a['name_function'];
 			if(!empty($namephp))
 			{
 				$action_name = eval("$namephp;");
-			}
-			else
-			{
+			} else {
 				$action_name = Yii::t('base',$a['actionName']);
 			}
-			
-			
 			
 			//用于判断操作是否可用
 			$evalphp = $a['show_function'];
 		 
 			$title_field =$a['title_field'];
-			 if($evalphp=='')
-			 {
+			if($evalphp=='')
+			{
 			 	if($title_field!='')
 				{
 					echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.$o->$title_field."』')\" class='with_title'>".$action_name."</a>";
-				}
-				else
-				{
+				} else {
 					echo "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
 				}
-			 }
-			 else
-			 {
+			} else {
 				if(@eval("$evalphp;")==1)
-				 {
+				{
 					if($title_field!='')
 					{
 						
 						echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
-					}
-					else
-					{
+					} else {
 						echo "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
 					}
-				 }
-				 else
-				 { 
+				} else { 
 				 	if(@eval("$evalphp;")!=2){
- 					 echo "<font color='#ccc'>".$action_name."</font>";	
+                        echo "<font color='#ccc'>".$action_name."</font>";	
 				 	}
- 					
-				 }
-			 }
+				}
+			}
 								
 			if($i<(count($act_list)-1))
 			{
-				if(@eval("$evalphp;")==1 or @eval("$evalphp;")==0){ 
-				echo " |  ";
+				if(@eval("$evalphp;")==1 or @eval("$evalphp;")==0)
+                { 
+                    echo " |  ";
 				}
 			}
 			$i++;

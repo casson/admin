@@ -11,8 +11,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php echo Yii::$app->id; ?></title>
 <link rel="icon" href="<?php echo Yii::$app->request->baseUrl; ?>/public/images/admin_img/favicon.ico" type="image/x-icon" />
-<link type="text/css" href="<?php echo Yii::$app->request->baseUrl; ?>/css/zh_cn_admin_login.css"  rel="stylesheet" />
-<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/js/jquery-1.8.3.min.js"></script>
+<link type="text/css" href="<?php echo Yii::$app->request->baseUrl; ?>/public/css/zh_cn_admin_login.css"  rel="stylesheet" />
+<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/jquery-1.8.3.min.js"></script>
 <script>
 
 //验证码
