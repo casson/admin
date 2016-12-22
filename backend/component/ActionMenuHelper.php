@@ -19,15 +19,16 @@ class ActionMenuHelper
 	* param boolean $at_bottom
 	* return arr $menu_list
 	*/
-	private static function getActionMenu($isShow=true,$at_bottom){
-		$isMenu = ($isShow == true)? '1':'0';
+	private static function getActionMenu($isShow=true,$at_bottom)
+	{
+		$isMenu = ($isShow == true) ? '1':'0';
 		$controller = Yii::$app->controller->id; 
 		$action = Yii::$app->controller->action->id;
 		$module = Yii::$app->controller->module->id;
-		$resource = Resource::find(array('module'=>$module, 'controller'=>$controller, 'action'=>$action))->one(); //,'order'=>'resource_id ASC'));		
+		$resource = Resource::find()->where(array('module'=>$module, 'controller'=>$controller, 'action'=>$action))->one();
 		if(Yii::$app->session['role_id']==1)
 		{
-			$menu_list = Resource::findAll(array('resource_id'=>$resource->resource_id, 'menu'=>$isMenu, 'disabled'=>0, 'at_bottom'=>$at_bottom));  //,'order'=>'list_order ASC'));
+			$menu_list = Resource::find()->where(array('parent_id'=>$resource->resource_id, 'menu'=>$isMenu, 'disabled'=>0, 'at_bottom'=>$at_bottom))->all();
 		} else {
 			$menu_list = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:resource_id and resource.menu='.$isMenu.' and resource.disabled=0 and resource.at_bottom='.$at_bottom.'','params'=>array(':role_id'=>Yii::$app->session['role_id'],':resource_id'=>$resource->resource_id),'order'=>'resource.list_order ASC'));			
 		}
@@ -44,19 +45,16 @@ class ActionMenuHelper
      */
     public static function getHiddenMenu($at_bottom=0)
 	{
-		dataselect::selectBs("db"); 
-		
+		dataselect::selectBs("db"); 		
 		$result = array();
-		$actionList = self::getActionMenu(true,$at_bottom);
+		$actionList = self::getActionMenu(false, $at_bottom);
 		foreach($actionList as $o){
 			$tmpAction = array();
 			if(Yii::$app->session['role_id']!=1)
 			{
 				$action = $o->resource;
-			}
-			else
-			{
-				$action=$o;
+			} else {
+				$action = $o;
 			}
 			
 			$actionName = trim(strtolower($action->action));

@@ -111,7 +111,16 @@ return [
                         'info' => 'pager.php',
                         'info/error' => 'error.php',
                     ],
-                ]
+                ],
+                'base*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'info' => 'base.php',
+                        'info/error' => 'error.php',
+                    ],
+                ],
             ],
         ]
     ],

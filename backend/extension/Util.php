@@ -2,11 +2,8 @@
 
 namespace app\extension;
 
-
 class Util
 {
-
-	const  IMGURL="http://img.game333.net";
 	/**
 	 *  functions.php 公共函数库
 	 */
