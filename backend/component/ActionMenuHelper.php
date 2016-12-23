@@ -3,7 +3,9 @@
 namespace app\component;
 
 use yii;
-use app\model\Resource;
+use \app\model\Resource;
+use \app\extension\Util;
+use \app\extension\Helper;
 
 class ActionMenuHelper 
 {
@@ -222,10 +224,9 @@ class ActionMenuHelper
 			} else {
 				$action_name = Yii::t('base',$a['actionName']);
 			}
-			
+            
 			//用于判断操作是否可用
-			$evalphp = $a['show_function'];
-		 
+			$evalphp = $a['show_function'];            
 			$title_field =$a['title_field'];
 			if($evalphp=='')
 			{
@@ -241,7 +242,7 @@ class ActionMenuHelper
 					if($title_field!='')
 					{
 						
-						echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
+						echo "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'. Util::new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
 					} else {
 						echo "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
 					}
@@ -273,7 +274,7 @@ class ActionMenuHelper
 	*@ $title_field 记录标题字段名称
 	*/
 	public static function  getProcessActList($o,$act_list,$key_field,$arg_name='id')
-	{
+	{        
 		$str='';
 		$i=0;
 		foreach($act_list as $a){
@@ -366,89 +367,3 @@ class ActionMenuHelper
 	}
 	
 }
-	
-	
-	
-
-//操作名切换
-function open_switch($open)
-{
-	if($open==1)
-	{
-		return Yii::t('resource','set_close');
-	}
-	else
-	{
-		return Yii::t('resource','set_open');
-	}	
-}
-//操作名切换
-function hot_switch($hot)
-{
-	if($hot==1)
-	{
-		return Yii::t('resource','unset_hot');
-	}
-	else
-	{
-		return Yii::t('resource','set_hot');
-	}	
-}
-function not_forbid_fields($field)
-{
-	$forbid_fields = Yii::$app->params['fields']['forbid_fields'];
-	if(!in_array($field,$forbid_fields))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-	
-}
-function not_forbid_delete($field)
-{
-	$forbid_delete = Yii::$app->params['fields']['forbid_delete'];
-	if(!in_array($field,$forbid_delete))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-	
-}
-
-	
-//判断是否为超级管理员
-function not_super_admin($id)
-{
-	
-	if($id!=1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-	
-}
-//判断是否为超级管理员
-function has_sub($parent_id)
-{
-	$link_list = Linkmenu::model()->findAll('key_id=:key_id or parent_id=:parent_id',array(':key_id'=>$parent_id,':parent_id'=>$parent_id));
-	
-	if(!empty($link_list))//有子级
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-	
-}
-?>
