@@ -2,7 +2,9 @@
 
 namespace app\model;
 
+use Yii;
 use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
 
 /**
  * This is the model class for table "{{role}}".
@@ -95,17 +97,13 @@ class Role extends ActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
-		$criteria=new CDbCriteria;
+		$criteria = self::find();
 
-		$criteria->compare('role_id',$this->role_id);
-		$criteria->compare('role_name',$this->role_name,true);
-		$criteria->compare('description',$this->description,true);
-		$criteria->compare('disabled',$this->disabled);
-
-		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+		return new ActiveDataProvider(array(
+			'query'=>$criteria,
 		));
 	}
+
 	//返回状态选项
 	public function getDisabledOptions()
 	{
