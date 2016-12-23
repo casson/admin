@@ -1,4 +1,9 @@
 <?php
+namespace app\module\admin\controllers;
+
+use app\component\EController;
+use app\component\ActionMenuHelper;
+use app\model\admin_log;
 
 class LogController extends EController
 {
@@ -16,20 +21,20 @@ class LogController extends EController
 	}
 	
 	//管理员管理
-	public function actionindex()
+	public function actionIndex()
 	{
 	
 		$this->layout='main';
 		$this->son_menu=0;	
 		$act_list=ActionMenuHelper::getHiddenMenu();
-		$model=new admin_log('search');  
+		$model=new admin_log();  
 		 if(isset($_GET['admin_log']))
 			$model->attributes=$_GET['admin_log'];
- 		$this->render('list',array(
-			'dataProvider'=>$model->search(),
-			'act_list'=>$act_list,
-			'model'=>$model)
-		); 
+ 		return  $this->render('list',array(
+					'dataProvider'=>$model->search(),
+					'act_list'=>$act_list,
+					'model'=>$model
+				)); 
 	} 
 	
 	//删除

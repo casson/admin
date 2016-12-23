@@ -7,9 +7,8 @@ use app\component\ActionMenuHelper;
 use app\model\Role;
 
 class RoleController extends EController
-{
-	
-	//public $layout = 'main';
+{	
+	public $layout = 'main';
 	
 	//过滤器
 	public function filters()
@@ -35,8 +34,8 @@ class RoleController extends EController
 		return  $this->render('list',array(
 					'dataProvider'=>$model->search(),
 					'model'=>$model,
-					'act_list'=>$act_list )
-				); 
+					'act_list'=>$act_list
+				)); 
 	}
 	
 	
@@ -177,6 +176,7 @@ class RoleController extends EController
 		return false;
 		
 	}
+	
 	//成员管理
 	public function actionMemberManage()
 	{
@@ -191,9 +191,6 @@ class RoleController extends EController
 			'dataProvider'=>$model->search(),
 			'act_list'=>$act_list)
 		); 
-		
-		
-	
 	}
 	
 	
@@ -215,10 +212,8 @@ class RoleController extends EController
 				}
 				
 			}
-			
-		}
-		catch(Exception $e) // an exception is raised if a query fails
-		{
+		/** an exception is raised if a query fails	**/
+		} catch(Exception $e) {
 			$transaction->rollback();
 			$this->showMessage(Yii::t('info',$e->getMessage()),'admin/role/rolemanage');
 		}
