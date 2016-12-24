@@ -35,15 +35,15 @@ $controller = Yii::$app->controller;
 		$controller->list_table_start ='<div class="tablelist"><table cellpadding="0" cellpadding="0" class="table"><tbody>
 		<tr  >
 		<th  width="5%">'.Yii::t('admin','id').'</th>
-		<th  width="8%">'.Yii::t('attr','name').'</th> 
-		<th  width="5%">'.Yii::t('attr','name').'</th>
+		<th  width="15%">'.Yii::t('attr','name').'</th> 
+		<th  width="15%">'.Yii::t('attr','name').'</th>
 		<th  width="5%">'.Yii::t('attr','parent_id').'</th>
 		<th  width="10%">'.Yii::t('attr','module').'</th>
 		<th  width="10%">'.Yii::t('attr','controller').'</th>
 		<th  width="10%">'.Yii::t('attr','action').'</th>
-		<th  width="10%">'.Yii::t('attr','menu').'</th>
-		<th  width="10%">'.Yii::t('attr','list_order').'</th>
-		<th  width="100">'.Yii::t('attr','disabled').'</th>
+		<th  width="5%">'.Yii::t('attr','menu').'</th>
+		<th  width="5%">'.Yii::t('attr','list_order').'</th>
+		<th  width="5%">'.Yii::t('attr','disabled').'</th>
 		<th>'.Yii::t('admin','manage_operation').'</th>
 		</tr>';
 		$controller->list_table_end = '</tbody></table></div>';

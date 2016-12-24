@@ -53,6 +53,7 @@ class Menu extends ActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 		$criteria=self::find(); 
+		$criteria->orderBy('resource_id desc');
  		return new ActiveDataProvider(array(
 				'query'=>$criteria,
 		));

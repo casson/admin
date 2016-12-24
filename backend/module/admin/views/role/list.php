@@ -32,7 +32,7 @@ $controller = Yii::$app->controller;
 		<tr >
 		<th  width="25" ><input type="checkbox" class="list_check_btn"></td>
 		<th  width="25">'.Yii::t('admin','id').'</td>
-		<th  width="100">'.Yii::t('attr','role_name').'</td>
+		<th  width="200">'.Yii::t('attr','role_name').'</td>
 		<th  width="100">'.Yii::t('admin','status').'</td>
 		<th>'.Yii::t('admin','manage_operation').'</td>
 		</tr>';
