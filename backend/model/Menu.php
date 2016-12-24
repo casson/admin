@@ -1,28 +1,26 @@
-
 <?php
- 
-class Menu extends CActiveRecord
-{
 
-	 
-	public static function model($className=__CLASS__)
+namespace app\model;
+
+use yii;
+use yii\db\ActiveRecord;
+use yii\data\ActiveDataProvider;
+ 
+class Menu extends ActiveRecord
+{
+	
+	/**
+	*@return String the connection of database
+	*/
+	public static function getDb()
+    {
+        // use the "db2" application component
+        return \Yii::$app->admin;  
+    }
+	
+    public static function tableName()
 	{
-		return parent::model($className);
-	}
-	
-	/* reset db */
-	public function getDbConnection()
-	{ 
-	  self::$db=Yii::app()->db;
-	  if(self::$db instanceof CDbConnection) return self::$db;
- 	 
-	}
-	
-	
-	
-    public function tableName()
-	{
-		return '{{resource}}';
+		return '{{%resource}}';
 	}
 	
 	/* reles */
@@ -54,37 +52,20 @@ class Menu extends CActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-		 
-		 $criteria=new CDbCriteria; 
-		 
-		 if($_GET['parent_id']){
-		 	$criteria->compare('parent_id',$_GET['parent_id'],false);
- 		 }else{
- 		 	$criteria->compare('name',$this->name,true,"or"); 
- 		 	$criteria->compare('module',$this->module,true,"or"); 
- 		 }
- 		 
-		 $criteria->order='resource_id desc';
-
- 		return new CActiveDataProvider($this, array(
-				'criteria'=>$criteria,
+		$criteria=self::find(); 
+ 		return new ActiveDataProvider(array(
+				'query'=>$criteria,
 		));
 	}
 	
 	
 	public function getTypeOptions()
 	{
-		
-		$menuinfo=Menu::model()->findAll(array("condition"=>"parent_id=0","order"=>"resource_id desc"));
-		
+		$menuinfo = Menu::find()->where(array("parent_id"=>0))->all(); //,"order"=>"resource_id desc"));
 		foreach($menuinfo as $_v){
-			
-    	$list[$_v->module]=Yii::t('resource',$_v->name);
-    
-    }
-
+    		$list[$_v->module]=Yii::t('resource',$_v->name);
+    	}
 		return $list;
-		 
 	}
  
  
