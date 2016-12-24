@@ -1,5 +1,13 @@
 <?php
 
+namespace app\module\admin\controllers;
+
+use yii;
+use app\component\Tree;
+use app\component\EController;
+use app\model\Resource;
+use app\model\RoleResource;
+
 class MenuController extends EController
 {
 	
@@ -55,7 +63,6 @@ class MenuController extends EController
 			$model->attributes=$_POST['MenuAddForm'];
 			if($model->validate()){	
 				if($model->addMenu()){
-					echo "dddd";exit;
 					//$this->showMessage(Yii::t('info','operation success'),'admin/menu/module');
 					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
 				}else{
@@ -65,11 +72,10 @@ class MenuController extends EController
 				//$this->refresh();			
 			}
 		}
-		$this->render('add',array(
-							'model'=>$model,
-							'parent_id_get'=>$parent_id_get
-							)
-					);
+		return 	$this->render('add',array(
+					'model'=>$model,
+					'parent_id_get'=>$parent_id_get
+				));
 	
 	}
 
@@ -142,15 +148,19 @@ class MenuController extends EController
 	
 	
 	//菜单结构预览
-	public function actionmenustr()
+	public function actionMenustr()
 	{
 		$role_id = $this->_getId();	
-		if ($role_id) {
+		if ($role_id) 
+		{
 			$menu = new Tree;
 			$menu->icon = array('│ ','├─ ','└─ ');
 			$menu->nbsp = '&nbsp;&nbsp;&nbsp;';
-			$resource_list = Resource::model()->findAll();
-			$priv_data = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id','params'=>array(':role_id'=>$role_id),'order'=>'resource.list_order ASC')); //获取权限表数据
+			$resource_list = Resource::find()->all();
+			$priv_data  = RoleResource::find()->joinWith('resource')
+			                               	  ->where(array('role_id'=>$role_id)) //,'order'=>'resource.list_order ASC'))
+											  //->createCommand()->getRawSql();
+											  ->all(); //获取权限表数据
 			$n=0;
 			foreach ($resource_list as $o) {
 				$result[$n]['id'] = $o->resource_id;
@@ -159,16 +169,14 @@ class MenuController extends EController
 				$result[$n]['level'] = $this->_get_level($o->resource_id,$resource_list);
 				$result[$n]['parentid_node'] = ($o->parent_id)? ' class="child-of-node-'.$o->parent_id.'"' : '';
 				$n++;
-			}
-			
+			}		
 			$str  = "<tr id='node-\$id' \$parentid_node>
 						<td style='padding-left:30px;'>\$spacer \$name <a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/index.php?r=admin/menu/addmodule&parent_id=\$id &quot;,&quot;pop_original&quot;,&quot;添加菜单&quot;)' title='添加'><b>+</b></a> <a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/index.php?r=admin/menu/edit&resource_id=\$id &quot;,&quot;pop_original&quot;,&quot;修改『 \$name 』&quot;)' title='修改'><b>←</b></a></td>
-					</tr>";
-		
+					</tr>";	
 			$menu->init($result);
 			$categorys = $menu->get_tree(0, $str);
 		}
-		$this->render('menu_str',array('categorys'=>$categorys,'role_id'=>$role_id)); 
+		return $this->render('menu_str',array('categorys'=>$categorys,'role_id'=>$role_id)); 
 	}
 	
 	

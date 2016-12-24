@@ -1,4 +1,7 @@
 <?php
+
+namespace app\component;
+
 /**
 * 通用的树型类，可以生成任何树型结构
 */

@@ -2,7 +2,9 @@
 
 namespace app\model;
 
+
 use yii\db\ActiveRecord;
+use app\model\Resource;
 
 /**
  * This is the model class for table "{{role_resource}}".
@@ -43,6 +45,18 @@ class RoleResource extends ActiveRecord
         return \Yii::$app->admin;  
     }
 
+    /**
+     *查询关联的Resourse
+     *
+     */
+    public function getResource()
+    {
+        // 第一个参数为要关联的子表模型类名，
+        // 第二个参数指定 通过子表的customer_id，关联主表的id字段
+        return $this->hasMany(Resource::className(), ['resource_id' => 'resource_id']);
+    }
+
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -72,7 +86,7 @@ class RoleResource extends ActiveRecord
 			'resource'=>array(self::BELONGS_TO,'Resource','resource_id'),
 		);
 	}
-
+	
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
