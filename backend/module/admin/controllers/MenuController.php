@@ -9,6 +9,7 @@ use app\model\Resource;
 use app\model\Menu;
 use app\model\RoleResource;
 use app\component\ActionMenuHelper;
+use app\module\admin\model\MenuEditForm;
 
 class MenuController extends EController
 {
@@ -58,7 +59,6 @@ class MenuController extends EController
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-	
 		if($_GET['parent_id']){
 			$parent_id_get = $_GET['parent_id'];	
 		}
@@ -85,12 +85,12 @@ class MenuController extends EController
 
 	
 	//修改
-	public function actionedit()
+	public function actionEdit()
 	{
 		$this->layout='pop';
 		$this->son_menu=1 ;
 		$id = $this->_getAdminId();
-		$admin = Menu::model()->findByPk($id);
+		$admin = Menu::findOne($id);
 		$model = new MenuEditForm;
 		$model->attributes = $admin->attributes;
 		
@@ -98,7 +98,6 @@ class MenuController extends EController
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
-
 		}
 		if(isset($_POST['MenuEditForm'])){
 			$model->attributes=$_POST['MenuEditForm'];
@@ -112,7 +111,7 @@ class MenuController extends EController
 				//$this->refresh();
 			}
 		}
-		$this->render('edit',array('model'=>$model,'admin'=>$admin));
+		return $this->render('edit',array('model'=>$model,'admin'=>$admin));
 	}
 	
 	
@@ -173,8 +172,8 @@ class MenuController extends EController
 			}		
 			$str  = "<tr id='node-\$id' \$parentid_node>
 						<td style='padding-left:30px;'>\$spacer \$name 
-							<a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/index.php?r=admin/menu/addmodule&parent_id=\$id &quot;,&quot;pop_original&quot;,&quot;添加菜单&quot;)' title='添加'><b>+</b></a>
-							<a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/index.php?r=admin/menu/edit&resource_id=\$id &quot;,&quot;pop_original&quot;,&quot;修改『 \$name 』&quot;)' title='修改'><b>←</b></a>
+							<a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/backend/web/admin/menu/addmodule?parent_id=\$id &quot;,&quot;pop_original&quot;,&quot;添加菜单&quot;)' title='添加'><b>+</b></a>
+							<a href='javascript:void(0);' onclick='javascript:edit(&quot;/admin/backend/web/admin/menu/edit?resource_id=\$id &quot;,&quot;pop_original&quot;,&quot;修改『 \$name 』&quot;)' title='修改'><b>←</b></a>
 						</td>
 					</tr>";	
 			$menu->init($result);

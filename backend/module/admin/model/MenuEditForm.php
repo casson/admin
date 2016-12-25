@@ -1,6 +1,11 @@
 <?php
 
-class MenuEditForm extends CFormModel
+namespace app\module\admin\model; 
+
+use yii;
+use yii\base\Model;
+
+class MenuEditForm extends Model
 {
 	
 	public $name;
@@ -20,8 +25,8 @@ class MenuEditForm extends CFormModel
 	public function rules()
 	{
 		return array(
-			array('name,parent_id,module,at_bottom,menu,disabled', 'required'),
-			array('controller,action,btn_class,title_field,list_order','length',min=>0),
+			//array('name,parent_id,module,at_bottom,menu,disabled', 'required'),
+			//array('controller,action,btn_class,title_field,list_order','length',min=>0),
 		);
 	}
 

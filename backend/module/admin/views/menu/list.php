@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use app\component\ActionMenuHelper;
 
 $controller = Yii::$app->controller;
+
 ?>
 
 
@@ -41,7 +42,7 @@ $controller = Yii::$app->controller;
 		<th  width="10%">'.Yii::t('attr','module').'</th>
 		<th  width="10%">'.Yii::t('attr','controller').'</th>
 		<th  width="10%">'.Yii::t('attr','action').'</th>
-		<th  width="5%">'.Yii::t('attr','menu').'</th>
+		<th  width="8%">'.Yii::t('attr','menu').'</th>
 		<th  width="5%">'.Yii::t('attr','list_order').'</th>
 		<th  width="5%">'.Yii::t('attr','disabled').'</th>
 		<th>'.Yii::t('admin','manage_operation').'</th>
