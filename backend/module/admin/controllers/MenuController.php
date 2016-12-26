@@ -10,6 +10,7 @@ use app\model\Menu;
 use app\model\RoleResource;
 use app\component\ActionMenuHelper;
 use app\module\admin\model\MenuEditForm;
+use app\module\admin\model\MenuAddForm;
 
 class MenuController extends EController
 {
@@ -49,7 +50,7 @@ class MenuController extends EController
 	} 
 		
 	//添加
-	public function actionaddmodule()
+	public function actionAddmodule()
 	{
 		$this->layout = 'pop';
 		$this->son_menu=1 ;

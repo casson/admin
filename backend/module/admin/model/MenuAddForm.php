@@ -1,6 +1,11 @@
 <?php
 
-class MenuAddForm extends CFormModel
+namespace app\module\admin\model;
+
+use yii;
+use yii\base\Model;
+
+class MenuAddForm extends Model
 {
 	
 	public $name;

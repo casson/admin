@@ -7,18 +7,18 @@
 			 <table cellpadding="0" cellpadding="0">
 				<tbody>
 					<tr>
-					<td width="80"><?php echo Html::activeLabel($model,'name');?></td> 
-					<td><?php echo Html::activeTextInput($model,'name',  array('class'=>'text')) ?></td>
+					<td width="120"><?php echo Html::activeLabel($model,'name');?></td> 
+					<td><?php echo Html::activeTextInput($model,'name',  array('class'=>'text','style'=>'width:160px')) ?></td>
 					
 					</tr>
 					<tr>
-					<td width="80"><?php echo Html::activeLabel($model,'parent_id');?></td> 
+					<td width="120"><?php echo Html::activeLabel($model,'parent_id');?></td> 
 					<td><?php echo Html::activeTextInput($model,'parent_id',  array('class'=>'text')) ?>
 					</td>
 					
 					</tr>
 					<tr>
-					<td width="80"><?php echo Html::activeLabel($model,'module');?></td> 
+					<td width="120"><?php echo Html::activeLabel($model,'module');?></td> 
 					<td><?php echo Html::activeTextInput($model,'module',  array('class'=>'text')) ?>
 					</td>					
 					</tr>
