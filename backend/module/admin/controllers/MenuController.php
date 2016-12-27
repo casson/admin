@@ -35,7 +35,6 @@ class MenuController extends EController
 		$this->layout = 'main';
 		$this->son_menu = 0 ;
 		$act_list=ActionMenuHelper::getHiddenMenu();
-
 		$model=new Menu();  
 		if(isset($_GET['Menu'])) 
 		{
@@ -93,23 +92,22 @@ class MenuController extends EController
 		$id = $this->_getAdminId();
 		$admin = Menu::findOne($id);
 		$model = new MenuEditForm;
-		$model->attributes = $admin->attributes;
-		
+		$model->setAttributes($admin->attributes,false);
+
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			echo ActiveForm::validate($model);
+			Yii::$app->end();
 		}
 		if(isset($_POST['MenuEditForm'])){
-			$model->attributes=$_POST['MenuEditForm'];
+			$model->setAttributes($_POST['MenuEditForm'], false);
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate()){	
 				if($model->editMenu($id)){
-					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
+					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
 				}else{
-					Yii::app()->user->setFlash('failed',Yii::t('info','operation failed'));
+					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
 				}
-				//$this->refresh();
 			}
 		}
 		return $this->render('edit',array('model'=>$model,'admin'=>$admin));
@@ -185,19 +183,14 @@ class MenuController extends EController
 	
 	
 	//删除菜单
-	public function actionmenudel()
+	public function actionMenudel()
 	{
 		$resource_id = $this->_getAdminId();
-		
-		if(Menu::model()->deleteByPk($resource_id))
-		{
-			
-			$this->showMessage(Yii::t('info','operation success'));
-			
-		}
-		else
-		{
-			$this->showMessage(Yii::t('info','operation failed'));
+		if(Menu::findOne($resource_id)->delete()>0)
+		{	
+			return $this->showMessage(Yii::t('info','operation success'));	
+		} else {
+			return $this->showMessage(Yii::t('info','operation failed'));
 		}
 	
 	}

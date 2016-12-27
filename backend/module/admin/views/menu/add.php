@@ -62,30 +62,18 @@
 					
 					
 					<tr>
-					<td>
-					 	<?php echo Html::activeLabel($model,'at_bottom');?>
-					</td>
-					<td>
-						<?php echo Html::activeRadioList($model,'at_bottom',$model->getBottomOptions(),array('template'=>'{input}{label}','separator'=>" "));?>
-					</td>
+					<td><?php echo Html::activeLabel($model,'at_bottom');?></td>
+					<td><?php echo Html::activeRadioList($model,'at_bottom',$model->getBottomOptions(),array('template'=>'{input}{label}','separator'=>" "));?></td>
 					</tr>
 					
 					<tr>
-					<td>
-					 	<?php echo Html::activeLabel($model,'menu');?>
-					</td>
-					<td>
-						<?php echo Html::activeRadioList($model,'menu',$model->getMenuOptions(),array('template'=>'{input}{label}','separator'=>" "));?>
-					</td>
+					<td><?php echo Html::activeLabel($model,'menu');?></td>
+					<td><?php echo Html::activeRadioList($model,'menu',$model->getMenuOptions(),array('template'=>'{input}{label}','separator'=>" "));?></td>
 					</tr>
 					
 					<tr>
-					<td>
-						<?php echo Html::activeLabel($model,'disabled');?>
-					</td>
-					<td>
-						<?php echo Html::activeRadioList($model,'disabled',$model->getDisabledOptions(),array('template'=>'{input}{label}','separator'=>" "));?>
-					</td>
+					<td><?php echo Html::activeLabel($model,'disabled');?></td>
+					<td><?php echo Html::activeRadioList($model,'disabled',$model->getDisabledOptions(),array('template'=>'{input}{label}','separator'=>" "));?></td>
 					</tr>
 					
 				</tbody>

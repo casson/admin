@@ -4,6 +4,7 @@ namespace app\module\admin\model;
 
 use yii;
 use yii\base\Model;
+use app\model\Menu;
 
 class MenuEditForm extends Model
 {
@@ -19,7 +20,6 @@ class MenuEditForm extends Model
 	public $btn_class;
 	public $title_field;
 	public $list_order;
-	
 	
 	//表单验证规则
 	public function rules()
@@ -52,8 +52,7 @@ class MenuEditForm extends Model
 	//编辑
 	public function editMenu($id)
 	{
-		$admin = Menu::model()->findByPk($id);
-
+		$admin = Menu::findOne($id);
 		$admin->name = $this->name;
 		$admin->parent_id = $this->parent_id;
 		$admin->module = $this->module;
@@ -64,14 +63,11 @@ class MenuEditForm extends Model
 		$admin->disabled = $this->disabled;
 		$admin->btn_class = $this->btn_class;
 		$admin->title_field = $this->title_field;
-		$admin->list_order = $this->list_order;
-		
+		$admin->list_order = $this->list_order;	
 		if($admin->save()){
-		return true;	
-	  }
-		
+			return true;	
+	  	}
 		return false;
-
 	}
 	
 	

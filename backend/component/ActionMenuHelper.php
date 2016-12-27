@@ -77,7 +77,7 @@ class ActionMenuHelper
     
 	//重建url
 	public static function reCreateUrl($actionModel,$url){
-		return Yii::$app->urlManager->createAbsoluteUrl($actionModel->module.'/'.$actionModel->controller.'/'.$actionModel->action.'/'.$url);
+		return Yii::$app->urlManager->createAbsoluteUrl($actionModel->module.'/'.$actionModel->controller.'/'.$actionModel->action.'?'.$url);
 	}
 	
 	
@@ -215,7 +215,7 @@ class ActionMenuHelper
                     }
                 }
 			}
-			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."/".$o->$key_field.$url_data);
+			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."=".$o->$key_field.$url_data);
 			//转换操作名称
 			$namephp = $a['name_function'];
 			if(!empty($namephp))
@@ -283,30 +283,19 @@ class ActionMenuHelper
 			if($data!='')
 			{	
 				if(@eval("$data;")==false)
-				 {
-				 	 $url_data = "/".str_replace("=","/",$data);
-					
-				 }
-				 else
-				 {
-				 	 
-					 $evalresult = @eval("$data;");
-					 if(preg_match('/\=$/',$evalresult))
-					 {
-					 	
+				{
+				 	 $url_data = "/".str_replace("=","/",$data);			
+				} else {		 	 
+					$evalresult = @eval("$data;");
+					if(preg_match('/\=$/',$evalresult))
+					{
+ 						$url_data='';
+					} else if(preg_match('/\=\&/',$evalresult)) {
 						$url_data='';
-					 }
-					 else if(preg_match('/\=\&/',$evalresult))
-					 {
-						$url_data='';
-					 }
-					 else
-					 {
-					 	 $url_data = "/".str_replace("=","/",$evalresult);
-					 }
-					
-					
-				 }
+					} else {
+					 	$url_data = "/".str_replace("=","/",$evalresult);
+					}	
+				}
 			}
 			$url = ActionMenuHelper::reCreateUrl($a['actionModel'],$arg_name."/".$o->$key_field.$url_data);
 			//转换操作名称
@@ -314,9 +303,7 @@ class ActionMenuHelper
 			if(!empty($namephp))
 			{
 				$action_name = eval("$namephp;");
-			}
-			else
-			{
+			} else {
 				$action_name = Yii::t('base',$a['actionName']);
 			}
 			//用于判断操作是否可用
@@ -327,31 +314,23 @@ class ActionMenuHelper
 			 	if($title_field!='')
 				{
 					$str.= "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.$o->$title_field."』')\" class='with_title'>".$action_name."</a>";
-				}
-				else
-				{
+				} else {
 					$str.= "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
 				}
-			 }
-			 else
-			 {
+			 } else {
 				if(@eval("$evalphp;")==1)
-				 {
+				{
 					if($title_field!='')
-					{
-						
+					{	
 						$str.= "<a  href='javascript:void(0);' onclick=\"javascript:edit('".$url."','".$a['btn_class']."','".Yii::t('base',$a['actionName']).'『'.new_add_slashes($o->$title_field)."』')\" class='with_title'>".$action_name."</a>";
-					}
-					else
-					{
+					} else {
 						$str.= "<a href='".$url."' class='".$a['btn_class']."'>".$action_name."</a>";	
 					}
-				 }
-				 else
-				 {
-				 	if($evalphp==2){
+				 } else {
+				 	if($evalphp==2)
+				 	{
 				 		
-				 	}else{
+				 	} else {
 				 		$str.= "<font color='#ccc'>".$action_name."</font>";
 				 	}
 				 }
