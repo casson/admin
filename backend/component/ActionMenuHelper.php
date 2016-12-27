@@ -88,7 +88,7 @@ class ActionMenuHelper
 		$controller = Yii::$app->controller->id;
 		$action = Yii::$app->controller->action->id;
 		$module = Yii::$app->controller->module->id;
-		$resource = Resource::find(array('module'=>$module,'controller'=>$controller,'action'=>$action, 'disabled'=>0))->one();
+		$resource = Resource::find()->where(array('module'=>$module,'controller'=>$controller,'action'=>$action, 'disabled'=>0))->one();
 		if($son_menu==1)
 		{
 			//$menu_list = Resource::find()->list_order_asc()->parent_order_asc()->findAll('resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\'))',array(':parent_id'=>$resource->parent_id));	

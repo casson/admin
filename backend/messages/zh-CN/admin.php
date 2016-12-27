@@ -3,7 +3,7 @@
 return array(
 		 
 		'user name'   =>'用户名：',
-		'user pwd'         =>'密&nbsp;&nbsp;&nbsp;码：', 
+		'user pwd'         =>'密 码：', 
 		'check code' =>'验证码：',
 		'check code time out' =>'验证码超时！',
 		'incorrect check code' =>'验证码错误！',

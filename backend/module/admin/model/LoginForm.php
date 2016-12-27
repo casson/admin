@@ -45,7 +45,7 @@ class LoginForm extends Model
 	public function is_correct_check_code()
 	{
 		
-		if(time()-Yii::app()->session['code_time']>3000)
+		if(time()-Yii::$app->session['code_time']>3000)
 		{
 			$this->addError('check_code',Yii::t('admin','check code time out'));
 		}

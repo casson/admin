@@ -85,11 +85,11 @@ var _select=$('.select');
 			-->
 			<div class="form_info">
 				<div class="field">
-					<?php echo Html::label('Username','user_name',array('style'=>'width:60px')); ?>
+					<?php echo Html::activeLabel($model,'user_name',array('style'=>'width:60px')); ?>
 					<?php echo Html::activeTextInput($model,'user_name',array('class'=>'text')); ?>
 				</div>
 				<div class="field">
-					<?php echo Html::label('Password','user_pwd',array('style'=>'width:60px')); ?>
+					<?php echo Html::activeLabel($model,'user_pwd',array('style'=>'width:60px')); ?>
 					<?php echo Html::activeTextInput($model,'user_pwd',array('class'=>'text')); ?>
 				</div>
 

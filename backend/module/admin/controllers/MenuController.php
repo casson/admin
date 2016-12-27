@@ -88,7 +88,7 @@ class MenuController extends EController
 	public function actionEdit()
 	{
 		$this->layout='pop';
-		$this->son_menu=1 ;
+		$this->son_menu = 1 ;
 		$id = $this->_getAdminId();
 		$admin = Menu::findOne($id);
 		$model = new MenuEditForm;
