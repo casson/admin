@@ -3,6 +3,7 @@
 namespace app\module\admin\controllers;
 
 use yii;
+use yii\widgets\ActiveForm;
 use app\component\Tree;
 use app\component\EController;
 use app\model\Resource;
@@ -11,6 +12,7 @@ use app\model\RoleResource;
 use app\component\ActionMenuHelper;
 use app\module\admin\model\MenuEditForm;
 use app\module\admin\model\MenuAddForm;
+
 
 class MenuController extends EController
 {
@@ -54,26 +56,26 @@ class MenuController extends EController
 		$this->layout = 'pop';
 		$this->son_menu=1 ;
 		$model = new MenuAddForm;
+
 		//ajax 验证
-		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+		if (Yii::$app->request->isAjax && Yii::$app->request->post('ajax') === 'ajax_form')
+		{
+			echo ActiveForm::validate($model);
+			Yii::$app->end();
 		}
+		
 		if($_GET['parent_id']){
 			$parent_id_get = $_GET['parent_id'];	
 		}
 		
-		if(isset($_POST['MenuAddForm'])){
-			$model->attributes=$_POST['MenuAddForm'];
+		if(Yii::$app->request->post('MenuAddForm')){
+			$model->setAttributes(Yii::$app->request->post('MenuAddForm'), false);
 			if($model->validate()){	
 				if($model->addMenu()){
-					//$this->showMessage(Yii::t('info','operation success'),'admin/menu/module');
-					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
-				}else{
-					//$this->showMessage(Yii::t('info','operation failed'),'admin/menu/module');
-					Yii::app()->user->setFlash('failed',Yii::t('info','operation failed'));
-				}	
-				//$this->refresh();			
+					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
+				} else { 
+					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
+				}		
 			}
 		}
 		return 	$this->render('add',array(

@@ -4,6 +4,7 @@ namespace app\module\admin\model;
 
 use yii;
 use yii\base\Model;
+use app\model\Menu;
 
 class MenuAddForm extends Model
 {
@@ -25,8 +26,13 @@ class MenuAddForm extends Model
 	public function rules()
 	{
 		return array(
-			array('name,parent_id,module,at_bottom,menu,disabled', 'required'),
-			array('controller,action,btn_class,title_field,list_order','length',min=>0),
+			array('name', 'required'),
+			array('parent_id','required'),
+			array('module','required'),
+			array('at_bottom','required'),
+			array('menu','required'),
+			array('disabled','required'),
+			//array('controller,action,btn_class,title_field,list_order','length',min=>0),
 		);
 	}
 
@@ -51,7 +57,7 @@ class MenuAddForm extends Model
 	//添加
 	public function addMenu()
 	{
-		$admin = new Menu ;
+		$admin = new Menu() ;
 		
 		$admin->name = $this->name;
 		$admin->parent_id = $this->parent_id;
