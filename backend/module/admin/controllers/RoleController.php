@@ -2,6 +2,10 @@
 
 namespace app\module\admin\controllers;
 
+use yii;
+use yii\widgets\ActiveForm;
+
+use app\component\Tree;
 use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\model\Role;
@@ -47,12 +51,12 @@ class RoleController extends EController
 		
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			echo ActiveForm::validate($model);
+			Yii::$app->end();
 		}
 		
 		if(isset($_POST['Role'])){	
-			$model->attributes=$_POST['Role'];
+			$model->setAttributes(Yii::$app->request->post('Role'));
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate()){	
 				if($model->save()){
@@ -66,45 +70,46 @@ class RoleController extends EController
 	}
 	
 	//编辑角色
-	public function actionEditRole()
+	public function actionEditrole()
 	{
 		$this->layout = 'pop';
 		$id = $this->_getId();
-		$model = Role::model()->findByPk($id);
+		$model = new Role();
+		$model = $model->findOne($id);
 
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			echo ActiveForm::validate($model);
+			Yii::$app->end();
 		}
-		if(isset($_POST['Role'])){	
-			$model->attributes=$_POST['Role'];
+		if(Yii::$app->request->post('Role')){
+			$model->setAttributes(Yii::$app->request->post('Role'), false);
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate()){	
 				if($model->save())
 				{
-					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
-					$this->refresh();
+					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
+					//$this->refresh();
 				}else{
-					Yii::app()->user->setFlash('failed',Yii::t('info','operation failed'));
-					$this->refresh();
+					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
+					//$this->refresh();
 				}
 			}
 			
 		}	
-		$this->render('edit',array('model'=>$model)); 
+		return $this->render('edit',array('model'=>$model)); 
 	
 	}
 	
 	//权限设置
-	public function actionPrivSetting()
+	public function actionPrivsetting()
 	{
 		$this->layout='pop';
 		$role_id = $this->_getId();
 		//数据更新
 		if(isset($_POST)&&!empty($_POST))
 		{	
-			$connection=Yii::app()->admin; 
+			$connection=Yii::$app->admin; 
 			$transaction=$connection->beginTransaction();
 			try
 			{
@@ -137,7 +142,7 @@ class RoleController extends EController
 			$menu = new Tree;
 			$menu->icon = array('│ ','├─ ','└─ ');
 			$menu->nbsp = '&nbsp;&nbsp;&nbsp;';
-			$resource_list = Resource::model()->findAll();
+			$resource_list = Resource::findAll();
 			$priv_data = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id','params'=>array(':role_id'=>$role_id),'order'=>'resource.list_order ASC')); //获取权限表数据
 			$n=0;
 			foreach ($resource_list as $o) {

@@ -55,12 +55,12 @@ class Role extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('role_name, description', 'required'),
-			array('disabled', 'numerical', 'integerOnly'=>true),
-			array('role_name', 'length', 'max'=>50),
+			//array('role_name, description', 'required'),
+			//array('disabled', 'numerical', 'integerOnly'=>true),
+			//array('role_name', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('role_id, role_name, description, disabled', 'safe', 'on'=>'search'),
+			//array('role_id, role_name, description, disabled', 'safe', 'on'=>'search'),
 		);
 	}
 
