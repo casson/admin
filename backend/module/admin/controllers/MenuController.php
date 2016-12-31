@@ -64,10 +64,7 @@ class MenuController extends EController
 			Yii::$app->end();
 		}
 		
-		if($_GET['parent_id']){
-			$parent_id_get = $_GET['parent_id'];	
-		}
-		
+        $parent_id_get = Yii::$app->request->get('parent_id') ? Yii::$app->request->get('parent_id') : '' ;	
 		if(Yii::$app->request->post('MenuAddForm')){
 			$model->setAttributes(Yii::$app->request->post('MenuAddForm'), false);
 			if($model->validate()){	
