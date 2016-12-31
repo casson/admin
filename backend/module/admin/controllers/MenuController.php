@@ -45,7 +45,7 @@ class MenuController extends EController
  		return  $this->render('list',array(
 					'dataProvider'=>$model->search(),
 					'act_list'=>$act_list,
-					'tp_act_list'=>$tp_act_list,
+					//'tp_act_list'=>$tp_act_list,
 					'model'=>$model
 				)); 
 	} 

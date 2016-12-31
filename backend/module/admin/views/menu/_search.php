@@ -1,6 +1,7 @@
 <?php
 	use yii\Helpers\Html;
 	use yii\widgets\ActiveForm;
+    $controller = Yii::$app->controller;
 ?>
 <div class="list_search_form" >
 	<?php $form=ActiveForm::begin(array(

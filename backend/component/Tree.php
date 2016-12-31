@@ -124,7 +124,7 @@ class Tree
 				$spacer = $adds ? $adds.$j : '';
 				$selected = $id==$sid ? 'selected' : '';
 				@extract($value);
-				$parentid == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
+				isset($parentid) && $parentid == 0 && $str_group ? eval("\$nstr = \"$str_group\";") : eval("\$nstr = \"$str\";");
 				$this->ret .= $nstr;
 				$nbsp = $this->nbsp;
 				$this->get_tree($id, $str, $sid, $adds.$k.$nbsp,$str_group);
