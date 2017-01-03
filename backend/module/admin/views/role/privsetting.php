@@ -1,5 +1,8 @@
-<link href="<?php echo Yii::app()->request->baseUrl; ?>/css/jquery.treeTable.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jquery.treetable.js"></script>
+<?php
+  use yii\widgets\ActiveForm;
+?>
+<link href="<?php echo Yii::$app->request->baseUrl; ?>/public/css/jquery.treeTable.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php echo Yii::$app->request->baseUrl; ?>/public/js/jquery.treetable.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $("#dnd-example").treeTable({
@@ -48,14 +51,14 @@
 				<span onClick="javascript:$('input[name=\'menuid[]\']').attr('checked', true)"><?php echo Yii::t('admin','select all');?></span>/<span onClick="javascript:$('input[name=\'menuid[]\']').attr('checked', false)"><?php echo Yii::t('admin','cancel');?></span>
 			</div>
 			<table width="100%" cellspacing="0" id="dnd-example"  style="border-right:none;border-left:none;">
-			<?php $form=$this->beginWidget('CActiveForm', array('id'=>'ajax_form','enableAjaxValidation'=>false,'clientOptions'=>array('validateOnSubmit'=>true, 'validateOnChange'=>false))); ?>
+			<?php $form=ActiveForm::begin(array('id'=>'ajax_form','enableAjaxValidation'=>false, 'validateOnSubmit'=>true, 'validateOnChange'=>false)); ?>
 			<input type="hidden" name="role_id" value="<?php echo $role_id;?>" />
 			<tbody>
 			<?php echo $categorys;?>
 			</tbody>
 			</table>
 			<div  style="margin:5px;"><input type="submit"  class="default_btn" name="dosubmit" id="dosubmit" value="<?php echo Yii::t('admin','submit');?>" /></div>
-			<?php $this->endWidget(); ?>
+			<?php ActiveForm::end(); ?>
 			<?php }else{?>
 			<p  class="please_select_site"><?php echo Yii::t('admin','please select role');?></p>
 			<?php }?>

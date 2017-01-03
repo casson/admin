@@ -9,6 +9,8 @@ use app\component\Tree;
 use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\model\Role;
+use app\model\Resource;
+use app\model\RoleResource;
 
 class RoleController extends EController
 {	
@@ -142,8 +144,10 @@ class RoleController extends EController
 			$menu = new Tree;
 			$menu->icon = array('│ ','├─ ','└─ ');
 			$menu->nbsp = '&nbsp;&nbsp;&nbsp;';
-			$resource_list = Resource::findAll();
-			$priv_data = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id','params'=>array(':role_id'=>$role_id),'order'=>'resource.list_order ASC')); //获取权限表数据
+			$resource_list = Resource::find()->all();
+			$priv_data = RoleResource::find()->with(['resource'=>function($query){
+				$query->orderBy('list_order ASC');
+			}])->where(array('role_id'=>$role_id))->all(); //获取权限表数据
 			$n=0;
 			foreach ($resource_list as $o) {
 				$result[$n]['id'] = $o->resource_id;
@@ -162,7 +166,7 @@ class RoleController extends EController
 			$menu->init($result);
 			$categorys = $menu->get_tree(0, $str);
 		}
-		$this->render('privsetting',array('categorys'=>$categorys,'role_id'=>$role_id)); 
+		return $this->render('privsetting',array('categorys'=>$categorys,'role_id'=>$role_id)); 
 	}
 	
 	/**
