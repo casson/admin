@@ -1,6 +1,12 @@
 <?php
 
-class AdminAddForm extends CFormModel
+namespace app\module\admin\model;
+
+use yii;
+use yii\base\Model;
+use app\model\Role;
+
+class AdminAddForm extends Model
 {
 	
 	public $role_id;
@@ -29,12 +35,11 @@ class AdminAddForm extends CFormModel
 	//判断是否是唯一
 	public function is_unique_admin()
 	{
-		$admin = Admin::model()->find(array('condition'=>'user_name=:user_name','params'=>array(':user_name'=>$this->user_name)));
+		$admin = Admin::find()->where(array('user_name'=>$this->user_name))->one();
 		if(!empty($admin))
 		{
 			$this->addError('user_name', Yii::t('attr','user_name')."'".$this->user_name."'".Yii::t('admin','be used'));
-		}
-	
+		}	
 	}
 	//字段标签
 	public function attributeLabels()
@@ -51,7 +56,7 @@ class AdminAddForm extends CFormModel
 	//返回语言
 	public function getRoleOptions()
 	{
-	   $role_list = Role::model()->findAll(array('condition'=>'disabled=0'));
+	   $role_list = Role::find()->where(array('disabled'=>'0'))->all();
 	   foreach($role_list as $o)
 	   {
 			
