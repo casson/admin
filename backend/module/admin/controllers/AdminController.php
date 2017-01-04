@@ -85,17 +85,14 @@ class AdminController extends EController
 			{	
 				if($model->editAdmin($admin_id))
 				{
-					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
-				}
-				else
-				{
-					Yii::app()->user->setFlash('failed',Yii::t('info','operation failed'));
+					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
+				} else {
+					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
 				}
 				$this->refresh();	
 			}
 		}
-		
-		$this->render('edit',array('model'=>$model,'admin'=>$admin));
+		return $this->render('edit',array('model'=>$model,'admin'=>$admin));
 	}
 	//删除管理员
 	public function actionDeleteAdmin()
@@ -103,11 +100,9 @@ class AdminController extends EController
 		$admin_id = $this->_getAdminId();
 		if(Admin::model()->deleteByPk($admin_id))
 		{			
-			$this->showMessage(Yii::t('info','operation success'));
-		}
-		else
-		{
-			$this->showMessage(Yii::t('info','operation failed'));
+			return $this->showMessage(Yii::t('info','operation success'));
+		} else {
+			return $this->showMessage(Yii::t('info','operation failed'));
 		}
 	}
 	
