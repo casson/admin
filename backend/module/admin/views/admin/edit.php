@@ -1,6 +1,6 @@
 	   <?php
-	   		use yii\Helper\Html;
-	   		use yii\widget\ActiveForm;
+	   		use yii\Helpers\Html;
+	   		use yii\widgets\ActiveForm;
 	   ?>
        <div class="common_form"   style="width:500px;" >
 	   		<?php $form = ActiveForm::begin(array('id'=>'ajax_form','enableAjaxValidation'=>true, 'validateOnSubmit'=>true, 'validateOnChange'=>false)); ?>

@@ -5,6 +5,8 @@ namespace app\module\admin\model;
 use yii;
 use yii\base\Model;
 use app\model\Role;
+use app\model\Admin;
+use app\extension\Util;
 
 class AdminAddForm extends Model
 {
@@ -22,14 +24,14 @@ class AdminAddForm extends Model
 	{
 		return array(
 		
-			array('user_name,user_pwd,real_name,role_id,confirm_pwd', 'required'),
-			array('user_name', 'is_unique_admin'),
+			//array('user_name,user_pwd,real_name,role_id,confirm_pwd', 'required'),
+			//array('user_name', 'is_unique_admin'),
 			//array('user_pwd', 'match','pattern'=>'/^[.+]{6,20}$/'),
-			array('confirm_pwd', 'compare', 'compareAttribute'=>'user_pwd'),
-			array('real_name', 'length','min'=>2),
-			array('real_name', 'length','max'=>20),
-			array('role_id', 'match','pattern'=>'/^[\d]+$/'),
-			array('user_name', 'match','pattern'=>'/^[\w\_]{5,16}$/'),
+			//array('confirm_pwd', 'compare', 'compareAttribute'=>'user_pwd'),
+			//array('real_name', 'length','min'=>2),
+			//array('real_name', 'length','max'=>20),
+			//array('role_id', 'match','pattern'=>'/^[\d]+$/'),
+			//array('user_name', 'match','pattern'=>'/^[\w\_]{5,16}$/'),
 		);
 	}
 	//判断是否是唯一
@@ -69,14 +71,14 @@ class AdminAddForm extends Model
 	public function addAdmin()
 	{
 		$admin = new Admin;
-		$admin->disabled =0;
-		$admin->lang =Yii::app()->language;
+		$admin->disabled  = 0;
+		$admin->lang 	  = Yii::$app->language;
 		$admin->user_name = $this->user_name; 
 		$admin->real_name = $this->real_name;
-		$admin->role_id = $this->role_id;
-		$password = password($this->user_pwd);
-		$admin->encrypt = $password['encrypt'];
-		$admin->user_pwd = $password['password'];
+		$admin->role_id   = $this->role_id;
+		$password 		  = Util::password($this->user_pwd);
+		$admin->encrypt   = $password['encrypt'];
+		$admin->user_pwd  = $password['password'];
 		$admin->save();
 		return true;
 

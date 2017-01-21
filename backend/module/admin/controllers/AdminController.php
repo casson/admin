@@ -2,6 +2,7 @@
 
 namespace app\module\admin\controllers;
 
+use yii;
 use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\model\Admin;

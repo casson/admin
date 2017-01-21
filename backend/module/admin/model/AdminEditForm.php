@@ -2,6 +2,7 @@
 
 namespace app\module\admin\model;
 
+use yii;
 use yii\base\Model;
 
 class AdminEditForm extends Model
