@@ -2,9 +2,12 @@
 
 namespace app\module\admin\controllers;
 
+use yii;
 use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\model\Admin;
+use app\module\admin\model\AdminEditForm;
+use app\module\admin\model\AdminAddForm;
 
 class AdminController extends EController
 {
@@ -37,7 +40,7 @@ class AdminController extends EController
 	}
 	
 	//添加管理员
-	public function actionAddAdmin()
+	public function actionAddadmin()
 	{
 		$this->layout = 'main';
 		$this->son_menu=1;
@@ -52,13 +55,13 @@ class AdminController extends EController
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate()){	
 				if($model->addAdmin()){
-					$this->showMessage(Yii::t('info','operation success'),'admin/admin/adminmanage');
+					return $this->showMessage(Yii::t('info','operation success'),'admin/admin/adminmanage');
 				}else{
-					$this->showMessage(Yii::t('info','operation failed'),'admin/admin/adminmanage');
+					return $this->showMessage(Yii::t('info','operation failed'),'admin/admin/adminmanage');
 				}				
 			}
 		}
-		$this->render('add',array('model'=>$model));
+		return $this->render('add',array('model'=>$model));
 	}
 	
 	//编辑管理员
@@ -66,7 +69,7 @@ class AdminController extends EController
 	{
 		$this->layout='pop';
 		$admin_id = $this->_getAdminId();
-		$admin = Admin::model()->findByPk($admin_id);
+		$admin = Admin::findOne($admin_id);
 		$model = new AdminEditForm;
 		$model->attributes = $admin->attributes;
 		$model->user_pwd='';
@@ -83,17 +86,14 @@ class AdminController extends EController
 			{	
 				if($model->editAdmin($admin_id))
 				{
-					Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
-				}
-				else
-				{
-					Yii::app()->user->setFlash('failed',Yii::t('info','operation failed'));
+					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
+				} else {
+					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
 				}
 				$this->refresh();	
 			}
 		}
-		
-		$this->render('edit',array('model'=>$model,'admin'=>$admin));
+		return $this->render('edit',array('model'=>$model,'admin'=>$admin));
 	}
 	//删除管理员
 	public function actionDeleteAdmin()
@@ -101,11 +101,9 @@ class AdminController extends EController
 		$admin_id = $this->_getAdminId();
 		if(Admin::model()->deleteByPk($admin_id))
 		{			
-			$this->showMessage(Yii::t('info','operation success'));
-		}
-		else
-		{
-			$this->showMessage(Yii::t('info','operation failed'));
+			return $this->showMessage(Yii::t('info','operation success'));
+		} else {
+			return $this->showMessage(Yii::t('info','operation failed'));
 		}
 	}
 	

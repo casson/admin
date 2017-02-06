@@ -10,6 +10,7 @@ use app\component\ActionMenuHelper;
 use app\model\Role;
 use app\model\Resource;
 use app\model\RoleResource;
+use app\model\Admin;
 
 class RoleController extends EController
 {	
@@ -45,7 +46,7 @@ class RoleController extends EController
 	
 	
 	//添加角色
-	public function actionAddRole(){
+	public function actionAddrole(){
 		$this->layout='main';
 		$this->son_menu=1;//取列表操作时，取resource 中menu 为0的记录
 		$model=new Role();
@@ -57,17 +58,17 @@ class RoleController extends EController
 		}
 		
 		if(isset($_POST['Role'])){	
-			$model->setAttributes(Yii::$app->request->post('Role'));
+			$model->setAttributes(Yii::$app->request->post('Role'), false);
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate()){	
 				if($model->save()){
-					$this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
+					return $this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
 				}else{	
-					$this->showMessage(Yii::t('info','operation failed'),'admin/role/rolemanage');
+					return $this->showMessage(Yii::t('info','operation failed'),'admin/role/rolemanage');
 				}
 			}			
 		}
-		$this->render('add',array('model'=>$model)); 
+		return $this->render('add',array('model'=>$model)); 
 	}
 	
 	//编辑角色
@@ -130,9 +131,7 @@ class RoleController extends EController
 				$transaction->commit();
 				Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
 				$this->refresh();
-			}
-			catch(Exception $e) // an exception is raised if a query fails
-			{
+			} catch(Exception $e) {
 				$transaction->rollback();
 				Yii::app()->user->setFlash('failed',Yii::t('info',$e->getMessage()));
 				$this->refresh();
@@ -186,16 +185,16 @@ class RoleController extends EController
 	}
 	
 	//成员管理
-	public function actionMemberManage()
+	public function actionMembermanage()
 	{
 		$this->layout='main';
 		$this->son_menu=1;//取列表操作时，取resource 中menu 为0的记录
 		$role_id = $this->_getId();
 		$act_list=ActionMenuHelper::getHiddenMenu();
-		$model=new Admin('search');
+		$model=new Admin();
 		$model->role_id=$role_id;	
 		//send model object for search
-		$this->render('membermanage',array(
+		return $this->render('membermanage',array(
 			'dataProvider'=>$model->search(),
 			'act_list'=>$act_list)
 		); 
@@ -203,25 +202,31 @@ class RoleController extends EController
 	
 	
 	//删除角色
-	public function actionDeleteRole()
+	public function actionDeleterole()
 	{
 		$id = $this->_getId();
-		$connection=Yii::app()->admin; 
+		$connection=Yii::$app->admin; 
 		$transaction=$connection->beginTransaction();
 		try
 		{
-			if(Role::model()->deleteByPk($id))
+			if(Role::findOne($id)->delete())
 			{
-				if(RoleResource::model()->deleteAll('role_id='.$id))
+				if(RoleResource::deleteAll('role_id='.$id)>=0)
 				{
+<<<<<<< HEAD
 					$transaction->commit();				
 					$this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
 				}				
+=======
+					$transaction->commit();
+					return $this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
+				}		
+>>>>>>> 5cd4fd32054b7b6b45f072994e4167afd8decf3e
 			}
 		/** an exception is raised if a query fails	**/
 		} catch(Exception $e) {
 			$transaction->rollback();
-			$this->showMessage(Yii::t('info',$e->getMessage()),'admin/role/rolemanage');
+			return $this->showMessage(Yii::t('info',$e->getMessage()),'admin/role/rolemanage');
 		}
 	}
 
