@@ -62,7 +62,7 @@ class AdminController extends EController
 	}
 	
 	//编辑管理员
-	public function actionEditAdmin()
+	public function actionEditadmin()
 	{
 		$this->layout='pop';
 		$admin_id = $this->_getAdminId();

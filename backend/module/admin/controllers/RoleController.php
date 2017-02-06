@@ -4,7 +4,6 @@ namespace app\module\admin\controllers;
 
 use yii;
 use yii\widgets\ActiveForm;
-
 use app\component\Tree;
 use app\component\EController;
 use app\component\ActionMenuHelper;
@@ -215,11 +214,9 @@ class RoleController extends EController
 			{
 				if(RoleResource::model()->deleteAll('role_id='.$id))
 				{
-					$transaction->commit();
-					
+					$transaction->commit();				
 					$this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
-				}
-				
+				}				
 			}
 		/** an exception is raised if a query fails	**/
 		} catch(Exception $e) {

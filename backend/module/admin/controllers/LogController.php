@@ -28,9 +28,11 @@ class LogController extends EController
 		$this->son_menu=0;	
 		$act_list=ActionMenuHelper::getHiddenMenu();
 		$model=new admin_log();  
-		 if(isset($_GET['admin_log']))
+		if(isset($_GET['admin_log']))
+        {
 			$model->attributes=$_GET['admin_log'];
- 		return  $this->render('list',array(
+ 		}
+        return  $this->render('list',array(
 					'dataProvider'=>$model->search(),
 					'act_list'=>$act_list,
 					'model'=>$model
@@ -42,18 +44,13 @@ class LogController extends EController
 	{
 		$admin_id = $this->_getAdminId();
 		if(Admin::model()->deleteByPk($admin_id))
-		{
-			
+		{	
 			$this->showMessage(Yii::t('info','operation success'));
-			
-			
-		}
-		else
-		{
+		}else{
 			$this->showMessage(Yii::t('info','operation failed'));
 		}
-	
 	}
+    
 	//获取id
 	private function _getAdminId(){
 		if(!isset($_GET['admin_id']) || !is_numeric($_GET['admin_id'])){

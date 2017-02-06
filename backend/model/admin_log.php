@@ -44,7 +44,8 @@ class admin_log extends ActiveRecord
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
-		$criteria = self::find(); 	
+		$criteria = self::find(); 
+        $criteria->orderBy('id desc');
  		return  new ActiveDataProvider(array(
 					'query'=>$criteria,
 				));
