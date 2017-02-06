@@ -65,11 +65,11 @@ class RoleResource extends ActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('role_id, resource_id', 'required'),
-			array('role_id, resource_id', 'numerical', 'integerOnly'=>true),
+			//array('role_id, resource_id', 'required'),
+			//array('role_id, resource_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('role_resource_id, role_id, resource_id', 'safe', 'on'=>'search'),
+			//array('role_resource_id, role_id, resource_id', 'safe', 'on'=>'search'),
 		);
 	}
 

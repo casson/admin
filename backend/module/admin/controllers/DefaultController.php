@@ -15,7 +15,7 @@ class DefaultController extends EController
 {
     //后台管理首页
     public function actionIndex()
-    { 
+    {
         $this->_loginCheck();   
         return $this->renderPartial('index',array('top_menus'=>$this->getTopMenus()));    
     }
@@ -26,7 +26,7 @@ class DefaultController extends EController
         Yii::$app->session['wrong_time']=0;//密码错误次数
         $model = new LoginForm ;   
         if(isset($_POST['LoginForm'])){
-            $model->attributes=$_POST['LoginForm']; 
+            $model->setAttributes(Yii::$app->request->post('LoginForm')); 
             if(!$model->validate()){
                 return $this->showMessage($model->getFirstError());
             }else{
@@ -55,9 +55,15 @@ class DefaultController extends EController
             $top_menus=Resource::findAll(array('parent_id'=>0,'disabled'=>0,'menu'=>1));
             //$top_menus->orderBy('list_order', 'ASC'); 
         }else{
-            $role_resource=RoleResource::model()->join('LEFT JOIN','{{%resource}}')->where(array('role_id'=>5,'parent_id'=>0,'disabled'=>0,'menu'=>1))->all();
-            foreach($role_resource as $o){
-                $top_menus[]=$o->resource;
+            $role_resource = RoleResource::find()->with(array('resource'=>function($query){
+                $query->andWhere(array('parent_id'=>'0', 'disabled'=>0, 'menu'=>1));
+            }))->where(array('role_id'=>Yii::$app->session['role_id']))->all();
+            foreach($role_resource as $value)
+            {
+                foreach($value->resource as $kk)
+                {
+                    $top_menus[] = $kk;
+                }
             }
         }
         return $top_menus;
@@ -74,7 +80,7 @@ class DefaultController extends EController
         $current_pos = Yii::t('resource',$resource_info['name'])."&nbsp;>&nbsp;";//点击导航时获得的当前位置信息
         //获取二级菜单
                 
-        if($_SESSION['role_id']==1){
+        if(Yii::$app->session['role_id']==1){
             $resource_list=Resource::findAll(array('parent_id'=>$parent_id,'disabled'=>0,'menu'=>1)); // ,'order'=>'list_order ASC,parent_id ASC'));    
             foreach($resource_list as $o)
             {
@@ -100,9 +106,7 @@ class DefaultController extends EController
                             if(@eval("$evalphp;")==false)
                             {
                                 $url .= "/".str_replace("=","/",$evalphp);
-                            }
-                            else
-                            {
+                            } else {
                                 $evalresult = @eval("$evalphp;");
                                 $url .= "/".str_replace("=","/",$evalresult);
                             }
@@ -118,7 +122,21 @@ class DefaultController extends EController
                 }               
             }       
         }else{
-            $resource_list=RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:parent_id and resource.disabled=:disabled  and resource.menu=:menu','params'=>array(':role_id'=>$_SESSION['role_id'],':parent_id'=>$parent_id,':disabled'=>0,'menu'=>1),'order'=>'resource.list_order ASC,resource.parent_id ASC'));
+            
+            $resource_role = RoleResource::find()
+                            ->with(array('resource'=>function($query) use ($parent_id){
+                                $query->andWhere(array('parent_id'=>$parent_id, 'disabled'=>0, 'menu'=>1));
+                                $query->orderBy('list_order ASC, parent_id ASC');
+                            }))->where(array('role_id'=>Yii::$app->session['role_id']))
+                            ->all();
+            $resource_list = [];                
+            foreach($resource_role as $kk=>$value)
+            {
+                foreach($value->resource as $vv)
+                {
+                    $resource_list[] = $vv;
+                }
+            }
             foreach($resource_list as $o)
             {
                 $class="left_title_up";
@@ -127,17 +145,29 @@ class DefaultController extends EController
                     $class="left_title";
                     $cs = "display:none";
                 }
-                echo "<div class='".$class."' onclick='switch_show(\"menu_".$o->resource_id."\",\"ul_".$o->resource_id."\")' id='menu_".$o->resource_id."'>".Yii::t('resource',$o->resource->name)."</div>";
-                $sub_resource_list=RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:parent_id and resource.disabled=:disabled  and resource.menu=:menu','params'=>array(':role_id'=>$_SESSION['role_id'],':parent_id'=>$o->resource_id,':disabled'=>0,'menu'=>1),'order'=>'resource.list_order ASC'));
+                echo "<div class='".$class."' onclick='switch_show(\"menu_".$o->resource_id."\",\"ul_".$o->resource_id."\")' id='menu_".$o->resource_id."'>".Yii::t('resource',$o->name)."</div>";
+                $sub_resource_role  = RoleResource::find()
+                                    ->with(array('resource'=>function($query) use($o){
+                                        $query->orderBy('list_order ASC'); 
+                                        $query->andWhere(array('parent_id'=>$o->resource_id, 'disabled'=>0, 'menu'=>1));
+                                    }))->where(array('role_id'=>Yii::$app->session['role_id']))
+                                    ->all();
+                $sub_resource_list = [];
+                foreach($sub_resource_role as $role)
+                {
+                    foreach($role->resource as $vv){
+                        $sub_resource_list[] = $vv;
+                    }
+                }    
                 if(count($sub_resource_list)>0)
                 {
                     echo "<ul id='ul_".$o->resource_id."' style=\"".$cs."\" class='side'>";
                     foreach($sub_resource_list as $o_1)
                     {       
-                        $url =$o_1->resource->module.'/'.$o_1->resource->controller.'/'.$o_1->resource->action;
-                        if($o_1->resource->data!='')
+                        $url =$o_1->module.'/'.$o_1->controller.'/'.$o_1->action;
+                        if($o_1->data!='')
                         {
-                            $evalphp = $o_1->resource->data;
+                            $evalphp = $o_1->data;
                             if(@eval("$evalphp;")==false)
                             {
                                 $url .= "/".str_replace("=","/",$evalphp);
@@ -146,14 +176,14 @@ class DefaultController extends EController
                                 $url .= "/".str_replace("=","/",$evalresult);
                             }
                         }
-                        $url = Yii::$app->createUrl($url);                 
-                        $temp_current_pos = $current_pos.Yii::t('resource',$o->resource->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
-                        $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->resource->name)."&nbsp;>&nbsp;";//更新当前位置信息
-                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/admin/backend/web/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->resource->name)."</a></li>";
+                        $url = Yii::$app->urlManager->createAbsoluteUrl($url);                 
+                        $temp_current_pos = $current_pos.Yii::t('resource',$o->name)."&nbsp;>&nbsp;";//点击左侧菜单时生成当前位置信息
+                        $temp_current_pos = $temp_current_pos.Yii::t('resource',$o_1->name)."&nbsp;>&nbsp;";//更新当前位置信息
+                        echo "<li><a target='main' href='$url' onclick=\"$('#crumbs').html('".$temp_current_pos."');$.get('/admin/backend/web/ajax/searchform', {search_form_show:0});\">".Yii::t('resource',$o_1->name)."</a></li>";
                         unset($temp_current_pos);
                     }
                     echo "</ul>";
-                }                   
+                }                 
             }
         }
         echo "<script type='text/javascript'>";
@@ -164,8 +194,8 @@ class DefaultController extends EController
     //锁屏功能
     public function actionLockScreen()
     {
-        Yii::$app->session['admin_id']='';
-        Yii::$app->session['role_id'] ='';
+        Yii::$app->session['admin_id'] = '';
+        Yii::$app->session['role_id']  = '';
     }
     
     //解除屏幕锁定

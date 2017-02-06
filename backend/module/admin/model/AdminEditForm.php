@@ -4,6 +4,9 @@ namespace app\module\admin\model;
 
 use yii;
 use yii\base\Model;
+use app\model\Role;
+use app\model\Admin;
+use app\extension\Util;
 
 class AdminEditForm extends Model
 {
@@ -47,7 +50,7 @@ class AdminEditForm extends Model
 	//返回角色
 	public function getRoleOptions()
 	{
-	   $role_list = Role::model()->findAll(array('condition'=>'disabled=0'));
+	   $role_list = Role::find()->where(array('disabled'=>'0'))->all();
 	   foreach($role_list as $o)
 	   {
 			
@@ -64,18 +67,16 @@ class AdminEditForm extends Model
 	//编辑管理员
 	public function editAdmin($id)
 	{
-		$admin = Admin::model()->findByPk($id);
+		$admin = Admin::findOne($id);
 		$admin->real_name = $this->real_name;
 		$admin->role_id = $this->role_id;
 		$admin->disabled = $this->disabled;
 		if($this->user_pwd!='')
 		{
-			$admin->user_pwd = password($this->user_pwd,$admin->encrypt);
+			$admin->user_pwd = Util::password($this->user_pwd,$admin->encrypt);
 		}
-		$admin->save();
-		
+		$admin->save();	
 		return true;
-
 	}
 	
 }

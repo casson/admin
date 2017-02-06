@@ -102,10 +102,12 @@ class MenuController extends EController
 		if(isset($_POST['MenuEditForm'])){
 			$model->setAttributes($_POST['MenuEditForm'], false);
 			// 验证用户输入，并在判断输入正确后重定向到
-			if($model->validate()){	
-				if($model->editMenu($id)){
+			if($model->validate())
+            {	
+				if($model->editMenu($id))
+                {
 					Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
-				}else{
+				} else {
 					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
 				}
 			}

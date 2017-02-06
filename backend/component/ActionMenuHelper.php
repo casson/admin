@@ -3,9 +3,10 @@
 namespace app\component;
 
 use yii;
-use \app\model\Resource;
-use \app\extension\Util;
-use \app\extension\Helper;
+use app\model\Resource;
+use app\extension\Util;
+use app\extension\Helper;
+use app\model\RoleResource;
 
 class ActionMenuHelper 
 {
@@ -105,7 +106,7 @@ class ActionMenuHelper
 		{
 			if(Yii::$app->session['role_id']!=1)
 			{
-				$obj = RoleResource::model()->find("role_id=".Yii::$app->session['role_id']." and resource_id=".$o->resource_id."");
+				$obj = RoleResource::find()->where(array("role_id"=>Yii::$app->session['role_id'],"resource_id"=>$o->resource_id))->all();
 				if(empty($obj)) 
 				{
 					continue;

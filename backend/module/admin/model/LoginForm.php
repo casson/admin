@@ -60,8 +60,7 @@ class LoginForm extends Model
 	public function login()
 	{   
 		//获取管理员信息
-		$admin = new Admin();
-		$admin = $admin->find('user_name=:user_name',array(':user_name'=>$this->user_name))->one();
+		$admin = Admin::find()->where(array('user_name'=>$this->user_name))->one();
 		if(empty($admin))
 		{
 			$this->addError('login_error',Yii::t('admin','incorrect user name or password'));

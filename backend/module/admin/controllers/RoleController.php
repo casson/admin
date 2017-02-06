@@ -109,7 +109,7 @@ class RoleController extends EController
 		$this->layout='pop';
 		$role_id = $this->_getId();
 		//数据更新
-		if(isset($_POST)&&!empty($_POST))
+		if(Yii::$app->request->isPost && Yii::$app->request->post())
 		{	
 			$connection=Yii::$app->admin; 
 			$transaction=$connection->beginTransaction();
@@ -117,10 +117,10 @@ class RoleController extends EController
 			{
 				//抛出异常
 				//throw new CHttpException(400,'Invalid request. id is required!');
-				RoleResource::model()->deleteAll(array('condition'=>'role_id=:role_id','params'=>array(':role_id'=>$role_id)));
-				if(!empty($_POST['menuid']))
+				RoleResource::deleteAll(array('role_id'=>$role_id));
+				if(Yii::$app->request->post('menuid'))
 				{
-					foreach($_POST['menuid'] as $key=>$value)
+					foreach(Yii::$app->request->post('menuid') as $key=>$value)
 					{
 						$model = new RoleResource;
 						$model->role_id = $role_id;
@@ -129,15 +129,15 @@ class RoleController extends EController
 					}	
 				}			
 				$transaction->commit();
-				Yii::app()->user->setFlash('success',Yii::t('info','operation success'));
-				$this->refresh();
+				Yii::$app->session->setFlash('success',Yii::t('info','operation success'));
+				//$this->refresh();
 			} catch(Exception $e) {
 				$transaction->rollback();
-				Yii::app()->user->setFlash('failed',Yii::t('info',$e->getMessage()));
-				$this->refresh();
-				
-			}	
+				Yii::$app->session->setFlash('failed',Yii::t('info',$e->getMessage()));
+				//$this->refresh();
+			}  
 		}
+        
 		if ($role_id) {
 			$menu = new Tree;
 			$menu->icon = array('│ ','├─ ','└─ ');
@@ -213,15 +213,10 @@ class RoleController extends EController
 			{
 				if(RoleResource::deleteAll('role_id='.$id)>=0)
 				{
-<<<<<<< HEAD
-					$transaction->commit();				
-					$this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
-				}				
-=======
 					$transaction->commit();
 					return $this->showMessage(Yii::t('info','operation success'),'admin/role/rolemanage');
 				}		
->>>>>>> 5cd4fd32054b7b6b45f072994e4167afd8decf3e
+
 			}
 		/** an exception is raised if a query fails	**/
 		} catch(Exception $e) {

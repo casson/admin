@@ -100,6 +100,7 @@ class Admin extends ActiveRecord
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 		$criteria= Admin::find();
+        $criteria->filterWhere(array('role_id'=>$this->role_id));
 		return new ActiveDataProvider( array(
 			'query'=> $criteria,
 			'pagination' => array(

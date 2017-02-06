@@ -45,18 +45,23 @@ class AdminController extends EController
 		$this->layout = 'main';
 		$this->son_menu=1;
 		$model = new AdminAddForm;
-		//ajax 验证
+		
+        //ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-		if(isset($_POST['AdminAddForm'])){	
-			$model->attributes=$_POST['AdminAddForm'];
+        
+		if(Yii::$app->request->post('AdminAddForm'))
+        {	
+			$model->setAttributes(Yii::$app->request->post('AdminAddForm'), false);
 			// 验证用户输入，并在判断输入正确后重定向到
-			if($model->validate()){	
-				if($model->addAdmin()){
+			if($model->validate())
+            {	
+				if($model->addAdmin())
+                {
 					return $this->showMessage(Yii::t('info','operation success'),'admin/admin/adminmanage');
-				}else{
+				} else {
 					return $this->showMessage(Yii::t('info','operation failed'),'admin/admin/adminmanage');
 				}				
 			}
@@ -71,16 +76,18 @@ class AdminController extends EController
 		$admin_id = $this->_getAdminId();
 		$admin = Admin::findOne($admin_id);
 		$model = new AdminEditForm;
-		$model->attributes = $admin->attributes;
+		$model->setAttributes($admin->getAttributes(), false);
 		$model->user_pwd='';
+        
 		//ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-		if(isset($_POST['AdminEditForm']))
+        
+		if(Yii::$app->request->post('AdminEditForm'))
 		{	
-			$model->attributes=$_POST['AdminEditForm'];
+			$model->setAttributes(Yii::$app->request->post('AdminEditForm'), false);
 			// 验证用户输入，并在判断输入正确后重定向到
 			if($model->validate())
 			{	
@@ -90,16 +97,16 @@ class AdminController extends EController
 				} else {
 					Yii::$app->session->setFlash('failed',Yii::t('info','operation failed'));
 				}
-				$this->refresh();	
 			}
 		}
 		return $this->render('edit',array('model'=>$model,'admin'=>$admin));
 	}
+    
 	//删除管理员
-	public function actionDeleteAdmin()
+	public function actionDeleteadmin()
 	{
 		$admin_id = $this->_getAdminId();
-		if(Admin::model()->deleteByPk($admin_id))
+		if(Admin::findOne($admin_id)->delete())
 		{			
 			return $this->showMessage(Yii::t('info','operation success'));
 		} else {
