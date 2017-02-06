@@ -273,7 +273,7 @@ class Util
 	* @param    string     $chars   可选的 ，默认为 0123456789
 	* @return   string     字符串
 	*/
-	function random($length, $chars = '0123456789') {
+	static function random($length, $chars = '0123456789') {
 		$hash = '';
 		$max = strlen($chars) - 1;
 		for($i = 0; $i < $length; $i++) {
@@ -334,7 +334,7 @@ class Util
 	static function password($password,$encrypt='')
 	{
 		$pwd = array();
-		$pwd['encrypt'] = $encrypt?$encrypt:random(6, $chars = '123456789abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ');
+		$pwd['encrypt'] = $encrypt ? $encrypt : self::random(6, $chars = '123456789abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ');
 		$pwd['password'] = md5(md5($password).$pwd['encrypt']);
 		return $encrypt?$pwd['password']:$pwd;
 	}
@@ -452,6 +452,7 @@ class Util
 	function fileext($filename) {
 		return strtolower(trim(substr(strrchr($filename, '.'), 1, 10)));
 	}
+	
 	//判断远程文件 
 	function check_remote_file_exists($url) 
 	{ 
@@ -484,58 +485,6 @@ class Util
 		$ext = fileext($file);
 		return in_array($ext,$ext_arr) ? $ext_arr :false;
 	}
-
-	/**
-	 * 判断是否为视频
-	 */
-	function is_video($file) {
-		$ext_arr = array('rm','mpg','avi','mpeg','wmv','flv','asf','rmvb');
-		$ext = fileext($file);
-		return in_array($ext,$ext_arr) ? $ext_arr :false;
-	}
-
-	function typess($id){
-		switch($id){
-			case 6;
-			$str = "网页游戏";
-			case 7;
-			$str = "网页游戏文章";
-			break;
-			case 8;
-			$str = "下载";
-			break;
-			case 9;
-			$str = "下载";
-			break;
-			case 1;
-			$str = "补丁";
-			break;
-			case 10;
-			$str = "汉化";
-			break;
-			case 2;
-			$str = "攻略";
-			break;
-			case 3;
-			$str = "新报";
-			break;
-			case 5;
-			$str = "资讯";
-			break;
-			case 11;
-			$str = "图片";
-			break;
-			case 12;
-			$str = "模拟器";
-			break;
-			case 13;
-			$str = "webgame";
-			break;
-		}
-		 
-		return $str;
-	}
-
 
 	function multi1($num, $perpage, $curpage, $mpurl ,$todiv='') { 
 

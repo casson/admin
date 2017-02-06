@@ -1,12 +1,16 @@
+<?php
+	use yii\Helpers\Html;
+	use yii\widgets\ActiveForm;
+?>	
 <div class="list_search_form" >
-	<?php $form=$this->beginWidget('CActiveForm', array(
+	<?php $form=ActiveForm::begin(array(
 		'action' => Yii::app()->createUrl($this->route),
 		'method' => 'get',
 	)); ?>
 	<div>
-		<span style="float:left"><?php echo $form->label($model, 'role_name'); ?></span>
+		<span style="float:left"><?php echo Html::ActiveLabel($model, 'role_name'); ?></span>
 		<span style="float:left">
-		<?php echo CHtml::activeTextField($model,'role_name',  array('class'=>'text')) ?>
+			<?php echo Html::activeTextInput($model,'role_name',  array('class'=>'text')) ?>
 		</span>
 	</div>
 	<div>
@@ -14,8 +18,8 @@
 		<span style="float:left"></span>
 	</div>
 	<div >
-	<?php echo CHtml::submitButton(Yii::t('admin','search')); ?>
+	<?php echo Html::submitButton(Yii::t('admin','search')); ?>
 	</div>
-	<?php $this->endWidget(); ?>
+	<?php ActiveForm::end(); ?>
 </div>
 <!-- form -->

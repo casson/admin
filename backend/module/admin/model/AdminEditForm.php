@@ -1,6 +1,11 @@
 <?php
 
-class AdminEditForm extends CFormModel
+namespace app\module\admin\model;
+
+use yii;
+use yii\base\Model;
+
+class AdminEditForm extends Model
 {
 	
 	public $role_id;
@@ -15,14 +20,14 @@ class AdminEditForm extends CFormModel
 	public function rules()
 	{
 		return array(
-				array('user_pwd', 'length','min'=>1),
+			//array('user_pwd', 'length','min'=>1),
 			//array('user_pwd', 'match','pattern'=>'/^[.+]{6,20}$/'),
-			array('confirm_pwd', 'compare', 'compareAttribute'=>'user_pwd'),
-			array('real_name', 'length','min'=>2),
-			array('real_name', 'length','max'=>20),
-			array('role_id', 'match','pattern'=>'/^[\d]+$/'),
-			array('user_name', 'match','pattern'=>'/^[\w\_]{5,16}$/'),
-			array('disabled', 'numerical', 'integerOnly'=>true),
+			//array('confirm_pwd', 'compare', 'compareAttribute'=>'user_pwd'),
+			//array('real_name', 'length','min'=>2),
+			//array('real_name', 'length','max'=>20),
+			//array('role_id', 'match','pattern'=>'/^[\d]+$/'),
+			//array('user_name', 'match','pattern'=>'/^[\w\_]{5,16}$/'),
+			//array('disabled', 'numerical', 'integerOnly'=>true),
 		);
 	}
 

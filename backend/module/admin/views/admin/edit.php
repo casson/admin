@@ -1,12 +1,16 @@
-
+	   <?php
+	   		use yii\Helpers\Html;
+	   		use yii\widgets\ActiveForm;
+	   ?>
        <div class="common_form"   style="width:500px;" >
-	   		<?php $form=$this->beginWidget('CActiveForm', array('id'=>'ajax_form','enableAjaxValidation'=>true,'clientOptions'=>array('validateOnSubmit'=>true, 'validateOnChange'=>false))); ?>
+	   		<?php $form = ActiveForm::begin(array('id'=>'ajax_form','enableAjaxValidation'=>true, 'validateOnSubmit'=>true, 'validateOnChange'=>false)); ?>
 			 <table cellpadding="0" cellpadding="0">
 				<tbody>
 					<tr>
-					<td width="80"><?php echo $form->labelEx($model,'user_name');?></td> 
-					<td><?php echo $model->user_name;?></td>
-					<?php echo CHtml::activeHiddenField($model,'user_name') ?>
+					<td width="80"><?php echo Html::activeLabel($model,'user_name');?></td> 
+					<td>
+						<?php echo $model->user_name;?></td>
+						<?php echo Html::activeHiddenField($model,'user_name') ?>
 					</tr>
 					<tr>
 					<td width="80"><?php echo $form->labelEx($model,'user_pwd');?></td> 
