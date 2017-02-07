@@ -55,9 +55,12 @@ class DefaultController extends EController
             $top_menus=Resource::findAll(array('parent_id'=>0,'disabled'=>0,'menu'=>1));
             //$top_menus->orderBy('list_order', 'ASC'); 
         }else{
+            
             $role_resource = RoleResource::find()->with(array('resource'=>function($query){
                 $query->andWhere(array('parent_id'=>'0', 'disabled'=>0, 'menu'=>1));
-            }))->where(array('role_id'=>Yii::$app->session['role_id']))->all();
+                $query->orderBy('list_order asc');
+            }))->where(array('role_id'=>Yii::$app->session['role_id']))->orderBy('resource_id asc')->all();
+            
             foreach($role_resource as $value)
             {
                 foreach($value->resource as $kk)
@@ -128,7 +131,7 @@ class DefaultController extends EController
                                 $query->andWhere(array('parent_id'=>$parent_id, 'disabled'=>0, 'menu'=>1));
                                 $query->orderBy('list_order ASC, parent_id ASC');
                             }))->where(array('role_id'=>Yii::$app->session['role_id']))
-                            ->all();
+                            ->orderBy('resource_id asc')->all();
             $resource_list = [];                
             foreach($resource_role as $kk=>$value)
             {
@@ -151,7 +154,7 @@ class DefaultController extends EController
                                         $query->orderBy('list_order ASC'); 
                                         $query->andWhere(array('parent_id'=>$o->resource_id, 'disabled'=>0, 'menu'=>1));
                                     }))->where(array('role_id'=>Yii::$app->session['role_id']))
-                                    ->all();
+                                    ->orderBy('resource_id asc')->all();
                 $sub_resource_list = [];
                 foreach($sub_resource_role as $role)
                 {
@@ -235,12 +238,13 @@ class DefaultController extends EController
     {
         if(!isset(Yii::$app->session['admin_id'])||empty(Yii::$app->session['admin_id'])||!isset(Yii::$app->session['role_id'])||empty(Yii::$app->session['role_id']))
         {
-            if(Yii::$app->session['admin_name']!=''){
+            if(Yii::$app->session['admin_name']!='')
+            {
                 Yii::$app->session->clear(); 
                 Yii::$app->session->destroy(); 
             }
-            return $this->showMessage("请重新登陆！",'login');
-            //return $this->showMessage("请重新登陆！",'login','',array(),'','top');
+            echo $this->showMessage("请重新登陆！",'login');
+            exit; 
         }
     }
 
