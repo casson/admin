@@ -7,6 +7,7 @@ use app\model\Resource;
 use app\extension\Util;
 use app\extension\Helper;
 use app\model\RoleResource;
+use app\component\DataSelect;
 
 class ActionMenuHelper 
 {
@@ -33,7 +34,18 @@ class ActionMenuHelper
 		{
 			$menu_list = Resource::find()->where(array('parent_id'=>$resource->resource_id, 'menu'=>$isMenu, 'disabled'=>0, 'at_bottom'=>$at_bottom))->all();
 		} else {
-			$menu_list = RoleResource::model()->with('resource')->findAll(array('condition'=>'role_id=:role_id and resource.parent_id=:resource_id and resource.menu='.$isMenu.' and resource.disabled=0 and resource.at_bottom='.$at_bottom.'','params'=>array(':role_id'=>Yii::$app->session['role_id'],':resource_id'=>$resource->resource_id),'order'=>'resource.list_order ASC'));			
+            $menu_list = array();
+			$role_list = RoleResource::find()->with(array('resource'=>function($query) use ($resource, $at_bottom, $isMenu){
+                $query->andwhere(array('disabled'=>0, 'parent_id'=>$resource->resource_id, 'at_bottom'=>$at_bottom, 'menu'=>$isMenu));
+                $query->orderBy('list_order asc');
+            }))->where(array('role_id'=>Yii::$app->session['role_id']))->all();	
+            foreach($role_list as $role)
+            {
+                foreach($role->resource as $vv)
+                {
+                    $menu_list[] = $vv;
+                }
+            }
 		}
 		return $menu_list;
 	}
@@ -55,11 +67,10 @@ class ActionMenuHelper
 			$tmpAction = array();
 			if(Yii::$app->session['role_id']!=1)
 			{
-				$action = $o->resource;
+				$action = $o;
 			} else {
 				$action = $o;
 			}
-			
 			$actionName = trim(strtolower($action->action));
 			$tmpAction['url'] 	 =  Yii::$app->urlManager->createAbsoluteUrl($action->module.'/'.$action->controller.'/'.$action->action.'/');
 			$tmpAction['actionName'] = Yii::t('resource',$action->name);
@@ -85,20 +96,19 @@ class ActionMenuHelper
 	//获取列表头菜单
 	public static function getListTopMenu($son_menu=1)
 	{
-		\app\component\DataSelect::selectBs("db");
+		DataSelect::selectBs("db");
 		$controller = Yii::$app->controller->id;
 		$action = Yii::$app->controller->action->id;
 		$module = Yii::$app->controller->module->id;
 		$resource = Resource::find()->where(array('module'=>$module,'controller'=>$controller,'action'=>$action, 'disabled'=>0))->one();
-		if($son_menu==1)
+        if($son_menu==1)
 		{
-			//$menu_list = Resource::find()->list_order_asc()->parent_order_asc()->findAll('resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\'))',array(':parent_id'=>$resource->parent_id));	
 			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\'))' ,array(':parent_id'=>$resource->parent_id))->all();	
 		} else {
 			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:resource_id or parent_id=:resource_id and menu=1 and disabled=0',array(':resource_id'=>$resource->resource_id))->all();
 		}        
 		$now_url = Yii::$app->request->getUrl();
-        
+           
         /**button 列表**/
         $str = '';
         
@@ -112,8 +122,7 @@ class ActionMenuHelper
 					continue;
 				}
 			}
-			
-			
+
 			$url = $o->module.'/'.$o->controller.'/'.$o->action;
 			if($o->data!='')
 			{

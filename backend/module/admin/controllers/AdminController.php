@@ -29,8 +29,7 @@ class AdminController extends EController
 	{
 		$this->layout   = 'main';
 		$this->son_menu = 0;	
-		$act_list=ActionMenuHelper::getHiddenMenu(0);
-		//$model=new Admin('search'); 
+		$act_list=ActionMenuHelper::getHiddenMenu(0); 
 		$model=new Admin();  	 
 		//send model object for search
 		return  $this->render('list',array(
