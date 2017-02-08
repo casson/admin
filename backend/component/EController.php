@@ -29,9 +29,11 @@ class EController extends Controller
 	//初始化
 	public function init()
 	{
-		//Yii::app()->session['search_form_show']=0;
+        $this->_loginCheck();
+        
+        //Yii::app()->session['search_form_show']=0;
 		//后台界面语言设置
-
+        
 		$cookie = Yii::$app->request->getCookies();
 		if(empty($cookie['admin_lang']->value))
 		{
@@ -152,5 +154,25 @@ class EController extends Controller
 		exit;
 		
 	}
-	
+    
+    //判断管理员是否登录
+    private function _loginCheck()
+    { 
+        if($this->id=='default' && $this->module->id=='admin')
+        {
+            return ;
+        }
+        if(!isset(Yii::$app->session['admin_id'])||empty(Yii::$app->session['admin_id'])||!isset(Yii::$app->session['role_id'])||empty(Yii::$app->session['role_id']))
+        {
+            if(Yii::$app->session['admin_name']!='')
+            {
+                Yii::$app->session->clear(); 
+                Yii::$app->session->destroy(); 
+            }
+            echo $this->showMessage("请重新登陆！", Yii::$app->request->baseUrl.'/admin/default/login');
+            exit; 
+        }
+    }
+    
+    
 }

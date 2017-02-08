@@ -2,6 +2,8 @@
 
 namespace app\extension;
 
+use Yii;
+
 class Util
 {
 	/**
@@ -652,258 +654,21 @@ class Util
 		}
 		return $str;
 	}
-
-
-
-
-	function multi3($num, $perpage, $curpage, $mpurl ,$types='',$todiv='') {
-
-
-
-		echo '<link href="css.css" rel="stylesheet" type="text/css" />';
-		global $_SGLOBAL;
-		$page = 7;
-		if($_SGLOBAL['showpage']) $page = $_SGLOBAL['showpage'];
-
-		$multipage = '';
-		//$mpurl .= strpos($mpurl, '?') ? '&' : '?';
-		$realpages = 1;
-		if($num > $perpage) {
-			$offset = 2;
-			$realpages = @ceil($num / $perpage);
-			$pages = $realpages;
-			if($page > $pages) {
-				$from = 1;
-				$to = $pages;
-			} else {
-				$from = $curpage - $offset;
-				$to = $from + $page - 1;
-				if($from < 1) {
-					$to = $curpage + 1 - $from;
-					$from = 1;
-					if($to - $from < $page) {
-						$to = $page;
-					}
-				} elseif($to > $pages) {
-					$from = $pages - $page + 1;
-					$to = $pages;
-				}
-			}
-			$multipage = '';
-			$urlplus = $todiv?"#$todiv":'';
-			$zts = ceil($num/$perpage);
-
-			$multipage .= "<div align='center' id='style'>共 <strong>".$num."</strong>个".$types."小游戏</div><div align='center' id='style_l'>".$curpage ."/".$zts."</div>" ;
-
-			if($curpage - $offset > 1 && $pages > $page) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=1{$urlplus}\"";
-					//$multipage.='1.html';
-					$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-				}
-				$multipage .= " class=\"first\"><div align='center' id='index'>首页</div></a>";
-			}
-			if($curpage > 1) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=".($curpage-1)."$urlplus\"";
-					//$multipage.=($curpage-1).'.html';
-					if($curpage==2){
-						$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-					}else{
-						$multipage.=' target="_self" href="'.$mpurl.($curpage-1).'.html" ';
-					}
-				}
-				$multipage .= " class=\"prev\"><div align='center'id='sy'>上页</div></a>";
-			}
-			for($i = $from; $i <= $to; $i++) {
-				if($i == $curpage) {
-					$multipage .= "<strong><div align='center' id='onenum'>".$i.'</div></strong>';
-				} else {
-					$multipage .= "<a ";
-					{
-						//$multipage .= "href=\"{$mpurl}page=$i{$urlplus}\"";
-						//$multipage.=($i).'.html';
-						if($i==1){
-							$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-						}else{
-							$multipage.=' target="_self" href="'.$mpurl.($i).'.html" ';
-						}
-							
-					}
-					$multipage .= "><div align='center' id='num'>$i</div></a>";
-				}
-			}
-			if($curpage < $pages) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=".($curpage+1)."{$urlplus}\"";
-					//$multipage.=($curpage+1).'.html';
-					$multipage.=' target="_self" href="'.$mpurl.($curpage+1).'.html" ';
-				}
-				$multipage .= " class=\"next\"><div align='center'id='next'>下页</div></a>";
-			}
-			if($to < $pages) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=$pages{$urlplus}\"";
-					$multipage.=' target="_self" href="'.$mpurl.($pages).'.html" ';
-				}
-				$multipage .= " class=\"last\"><div align='center' id='end'>尾页</div></a>";
-			}
-
-			if($multipage) {
-				$multipage = ''.$multipage;
-			}
-		}
-		$option='';
-
-		$aa = ceil($num /$perpage);
-		for($d=1; $d<=$aa;$d++){
-			$option.= "<option value='".$mpurl.$d.".html'>$d</a>  </option>";
-		}
-		/*if($d>2){
-		 $multipage.="<div style='float:left'><select  onChange='location.replace(this.value)'> ".$option."</select></div>";
-		}	*/
-
-		return $multipage;
-	}
-
-	function multi4($num, $perpage, $curpage, $mpurl ,$todiv='') {
-
-
-
-		global $_SGLOBAL;
-		$page = 7;
-		if($_SGLOBAL['showpage']) $page = $_SGLOBAL['showpage'];
-
-		$multipage = '';
-		//$mpurl .= strpos($mpurl, '?') ? '&' : '?';
-		$realpages = 1;
-		if($num > $perpage) {
-			$offset = 2;
-			$realpages = @ceil($num / $perpage);
-			$pages = $realpages;
-			if($page > $pages) {
-				$from = 1;
-				$to = $pages;
-			} else {
-				$from = $curpage - $offset;
-				$to = $from + $page - 1;
-				if($from < 1) {
-					$to = $curpage + 1 - $from;
-					$from = 1;
-					if($to - $from < $page) {
-						$to = $page;
-					}
-				} elseif($to > $pages) {
-					$from = $pages - $page + 1;
-					$to = $pages;
-				}
-			}
-			$multipage = '';
-			$urlplus = $todiv?"#$todiv":'';
-			$zts = ceil($num/$perpage);
-
-			$multipage .= "<a href=''>".$curpage ."/".$zts."</a>" ;
-
-			if($curpage - $offset > 1 && $pages > $page) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=1{$urlplus}\"";
-					//$multipage.='1.html';
-					if($mpurl=="index_"){
-						$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-					}else{
-						$multipage.=' target="_self" href="'.$mpurl.'1.html" ';
-					}
-
-						
-				}
-				$multipage .= " class=\"first\">首页</a>";
-			}
-			if($curpage > 1) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=".($curpage-1)."$urlplus\"";
-					//$multipage.=($curpage-1).'.html';
-					if($curpage==2){
-							
-							
-							
-						if($mpurl=="index_"){
-							$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-						}else{
-							$multipage.=' target="_self" href="'.$mpurl.'1.html" ';
-						}
-
-					}else{
-						$multipage.=' target="_self" href="'.$mpurl.($curpage-1).'.html" ';
-					}
-				}
-				$multipage .= " class=\"prev\">上页</a>";
-			}
-			for($i = $from; $i <= $to; $i++) {
-				if($i == $curpage) {
-					$multipage .= "<a href='' class='current'>".$i.'</a>';
-				} else {
-					$multipage .= "<a ";
-					{
-						//$multipage .= "href=\"{$mpurl}page=$i{$urlplus}\"";
-						//$multipage.=($i).'.html';
-						if($i==1){
-
-							if($mpurl=="index_"){
-								$multipage.=' target="_self" href="'.str_replace("_","",$mpurl).'.html" ';
-							}else{
-								$multipage.=' target="_self" href="'.$mpurl.'1.html" ';
-							}
-
-						}else{
-							$multipage.=' target="_self" href="'.$mpurl.($i).'.html" ';
-						}
-
-					}
-					$multipage .= ">$i</a>";
-				}
-			}
-			if($curpage < $pages) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=".($curpage+1)."{$urlplus}\"";
-					//$multipage.=($curpage+1).'.html';
-					$multipage.=' target="_self" href="'.$mpurl.($curpage+1).'.html" ';
-				}
-				$multipage .= " class=\"next\">下页</a>";
-			}
-			if($to < $pages) {
-				$multipage .= "<a ";
-				{
-					//$multipage .= "href=\"{$mpurl}page=$pages{$urlplus}\"";
-					$multipage.=' target="_self" href="'.$mpurl.($pages).'.html" ';
-				}
-				$multipage .= " class=\"last\">尾页</a>";
-			}
-
-			if($multipage) {
-				$multipage = ''.$multipage;
-			}
-		}
-		$option='';
-
-		$aa = ceil($num /$perpage);
-		for($d=1; $d<=$aa;$d++){
-			$option.= "<option value='".$mpurl.$d.".html'>$d</a>  </option>";
-		}
-		/*if($d>2){
-		 $multipage.="<div style='float:left'><select  onChange='location.replace(this.value)'> ".$option."</select></div>";
-		}	*/
-
-		return $multipage;
-	}
-
-
+    
+    /**
+     * 判断是否是超级管理员
+     *
+     */
+    static function isAdministrator()
+    {
+        if(Yii::$app->session['role_id']==1)
+        {
+            return true;
+        } else {
+            return false;
+        }        
+    }
+    
 }
 
 ?>

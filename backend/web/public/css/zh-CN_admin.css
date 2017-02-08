@@ -546,6 +546,11 @@ p a{
 .table .sort{
 	background:url(../images/admin_img/sort_ico.jpg) no-repeat 0 center;
 }
+.table  .line-list {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .table .sort span{
 	background:none;
 }
