@@ -124,6 +124,24 @@ return [
                         'info/error' => 'error.php',
                     ],
                 ],
+                'global*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap' => [
+                        'info'=> 'global.php',
+                        'info/error' =>'error.php',
+                    ],
+                ],
+                'editor*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en',
+                    'fileMap'=>[
+                        'info'=>'editor.php',
+                        'info/error'=>'error.php',
+                    ]
+                ],
             ],
         ]
     ],

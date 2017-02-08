@@ -2,9 +2,12 @@
 
 namespace app\module\news\controllers;
 
+use Yii;
+use app\widgets\ActiveForm;
 use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\module\news\model\News;
+use app\module\news\model\NewsAddForm;
 
 class NewsController extends EController
 {
@@ -36,5 +39,36 @@ class NewsController extends EController
 		); 
     }
     
+    
+    /**
+     * 添加资讯
+     *
+     */
+    public function actionAdd()
+    {
+        $this->layout = 'main';
+        $this->son_menu = 1 ;
+        $model = new NewsAddForm();
+        if(Yii::$app->request->post('ajax') && Yii::$app->request->post('ajax') =='ajax_form')
+        {
+            echo ActiveForm::validate($model);
+			Yii::$app->end();
+        }
+        if(Yii::$app->request->post('NewsAddForm'))
+        {	
+			$model->setAttributes(Yii::$app->request->post('NewsAddForm'), false);
+			// 验证用户输入，并在判断输入正确后重定向到
+			if($model->validate())
+            {	
+				if($model->addNews())
+                {
+					return $this->showMessage(Yii::t('info','operation success'),'admin/admin/adminmanage');
+				} else {
+					return $this->showMessage(Yii::t('info','operation failed'),'admin/admin/adminmanage');
+				}				
+			}
+		}
+		return $this->render('add',array('model'=>$model));
+    }
     
 }

@@ -48,7 +48,7 @@ class AdminController extends EController
         //ajax 验证
 		if (isset($_POST['ajax']) && $_POST['ajax'] === 'ajax_form') {
 			echo CActiveForm::validate($model);
-			Yii::app()->end();
+			Yii::$app->end();
 		}
         
 		if(Yii::$app->request->post('AdminAddForm'))
