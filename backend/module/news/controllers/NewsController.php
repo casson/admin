@@ -38,7 +38,17 @@ class NewsController extends EController
 			'act_list'=>$act_list)
 		); 
     }
-    
+
+
+    /**
+     * 添加资讯
+     *
+     */
+    public function actionAdd()
+    {
+    	$this->layout = 'main';
+    	return "ddddddd";
+    }
     
     /**
      * 添加资讯
