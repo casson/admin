@@ -27,9 +27,10 @@ class Menu extends ActiveRecord
 	public function rules()
 	{
 		return array(
-				array('name,module,parent_id', 'safe', 'on'=>'search'),
+            array('name,module,parent_id', 'safe', 'on'=>'search'),
 		);
 	}
+    
 	/* replace  */
 	public function attributeLabels()
 	{
@@ -50,12 +51,10 @@ class Menu extends ActiveRecord
 
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
 		$criteria=self::find(); 
 		$criteria->orderBy('resource_id desc');
  		return new ActiveDataProvider(array(
-				'query'=>$criteria,
+			'query'=>$criteria,
 		));
 	}
 	
@@ -68,10 +67,7 @@ class Menu extends ActiveRecord
     	}
 		return $list;
 	}
- 
- 
-	
-
+    
 }
 
 

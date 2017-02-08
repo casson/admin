@@ -38,17 +38,6 @@ class NewsController extends EController
 			'act_list'=>$act_list)
 		); 
     }
-
-
-    /**
-     * 添加资讯
-     *
-     */
-    public function actionAdd()
-    {
-    	$this->layout = 'main';
-    	return "ddddddd";
-    }
     
     /**
      * 添加资讯
@@ -72,13 +61,27 @@ class NewsController extends EController
             {	
 				if($model->addNews())
                 {
-					return $this->showMessage(Yii::t('info','operation success'),'admin/admin/adminmanage');
+					return $this->showMessage(Yii::t('info','operation success'),'list');
 				} else {
-					return $this->showMessage(Yii::t('info','operation failed'),'admin/admin/adminmanage');
+					return $this->showMessage(Yii::t('info','operation failed'),'list');
 				}				
 			}
 		}
 		return $this->render('add',array('model'=>$model));
     }
     
+    /**
+     * 删除资讯
+     *
+     */
+    public function actionDelete()
+    {
+        $id = Yii::$app->request->get('id');
+        if(News::findOne($id)->delete())
+        {
+            return $this->showMessage(Yii::t('info','operation success'),'list');
+        } else {
+            return $this->showMessage(Yii::t('info','operation failed'),'list');
+        }   
+    }
 }

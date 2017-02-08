@@ -4,6 +4,7 @@ namespace app\module\news\model;
 
 use Yii;
 use yii\base\Model;
+use app\module\news\model\News;
 
 class NewsAddForm extends Model
 {
@@ -26,6 +27,18 @@ class NewsAddForm extends Model
         $newsTypes[0] = '请选择资讯类型';
         array_multisort($newsTypes,SORT_DESC,SORT_NUMERIC);
         return $newsTypes;
+    }
+    
+    public function addNews()
+    {
+        $model = new News();
+        $model->title = $this->title;
+        $model->content = $this->content;
+        $model->type = $this->type;
+        $model->sendtime = time();
+        $model->admin = Yii::$app->session['admin_real_name'];
+        $model->admin_id = Yii::$app->session['admin_id'];
+        return $model->save();
     }
     
 }

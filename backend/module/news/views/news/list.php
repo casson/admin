@@ -30,10 +30,11 @@
 		//列表模板相关
 		$controller->list_table_start ='<div class="tablelist"><table cellpadding="0" cellpadding="0" class="table"><tbody>
 		<tr>
-		<th  width="10%">id</td>
+        <th  width="2%" ><input type="checkbox" class="list_check_btn"></td>
+		<th  width="5%">id</td>
 		<th  width="10%">类型</td>
 		<th  width="20%">标题</td>
-		<th  width="10%">发布时间</td>
+		<th  width="20%">发布时间</td>
         <th  width="10%">编辑</td>
         <th  width="10%">是否通过</td>
 		<th  width="20%">操作</td>
