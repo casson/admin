@@ -8,6 +8,7 @@ use app\component\EController;
 use app\component\ActionMenuHelper;
 use app\module\news\model\News;
 use app\module\news\model\NewsAddForm;
+use app\module\news\model\NewsEditForm;
 
 class NewsController extends EController
 {
@@ -69,6 +70,44 @@ class NewsController extends EController
 		}
 		return $this->render('add',array('model'=>$model));
     }
+    
+    
+    /**
+     * 修改资讯
+     *
+     */
+    public function actionEdit()
+    {
+        $this->layout = 'main';
+        $this->son_menu = 1 ;
+        $model = new NewsEditForm();
+        $news  = News::findOne(Yii::$app->request->get('id'));
+        $model->setAttributes($news->getAttributes(), false);
+        
+        if(Yii::$app->request->post('ajax') && Yii::$app->request->post('ajax') =='ajax_form')
+        {
+            echo ActiveForm::validate($model);
+			Yii::$app->end();
+        }
+        
+        if(Yii::$app->request->post('NewsEditForm'))
+        {	
+			$model->setAttributes(Yii::$app->request->post('NewsEditForm'), false);
+			// 验证用户输入，并在判断输入正确后重定向到
+			if($model->validate())
+            {	
+				if($model->editNews(Yii::$app->request->get('id')))
+                {
+					return $this->showMessage(Yii::t('info','operation success'),'list');
+				} else {
+					return $this->showMessage(Yii::t('info','operation failed'),'list');
+				}				
+			}
+		}
+		return $this->render('edit',array('model'=>$model));
+    }
+    
+    
     
     /**
      * 删除资讯

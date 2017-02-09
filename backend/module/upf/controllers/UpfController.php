@@ -1,9 +1,18 @@
 <?php
 
+namespace app\module\upf\controllers;
+
+use yii;
+use yii\base\Controller;
+use app\extension\dirUtil;
+use app\extension\Util;
+
 //附件
 class UpfController extends Controller
 {
-	public  $layout = 'main';
+	public $layout = 'main';
+    public $assetsUrl;
+    
 	private $tag=""  ; //前缀
 	private $dir;   //上传路径
 	private $auto='true';//自动上传
@@ -21,12 +30,13 @@ class UpfController extends Controller
 	private $shui; //水印图片 例如 1.png
 	private $st; //缩图 例如 192*168
 	private $pic ;
- 
+    
 	
 	public function init()
 	{
         //$this->pic = "uploads/oday/content/2014/07/17/1.jpg";
-		$this->url=Yii::app()->request->baseUrl;
+		$this->url=Yii::$app->request->baseUrl;
+        
   		//(-------------------------接受传值-------------------)
 		//文件格式
 		if(isset($_REQUEST['ext'])&&$_REQUEST['ext']!='')
@@ -43,7 +53,6 @@ class UpfController extends Controller
 		{
 			$this->thumb = $_REQUEST['thumb'];
 		}
-		
 		//最大上传文件数目初始化
 		if(isset($_GET['max_num'])&&$_GET['max_num']!='')
 		{
@@ -70,8 +79,12 @@ class UpfController extends Controller
 			$this->model = $_REQUEST['model'];
 		//	echo $this->model;
 		}
-		
-	 /*
+        //资源id
+		if(isset($_REQUEST['assetsUrl']) && $_REQUEST['assetsUrl']!='')
+        {
+            $this->assetsUrl = Yii::$app->request->baseUrl.'/assets/'.$_REQUEST['assetsUrl'];
+        }
+        /*
 		//重命名
 		if(isset($_COOKIE['rename'])&&$_COOKIE['rename']!='')
 		{
@@ -83,17 +96,14 @@ class UpfController extends Controller
 			$this->rename = $_REQUEST['rename'];
 		}
 		/*shui*/
-		
 		if(isset($_REQUEST['shui']))
 		{
 			$this->shui = $_REQUEST['shui'];
 		}
-		
 		if(isset($_REQUEST['st']))
 		{
 			$this->st = $_REQUEST['st'];
 		}
-		
 		$tname = "daotu";
 		//预处理
 		if(!empty($_REQUEST['style']))
@@ -101,113 +111,95 @@ class UpfController extends Controller
 			$tname="contents";
 			$this->style = 1; 
 		}
-		$this->dir =  $this->url."/uploads/".$this->model."/".$tname."/".date("Y")."/".date("m")."/".date("d")."/";
-		
-		
-		 
-		if($this->thumb){
+		$this->dir =  $this->url."/uploads/".$this->model."/".$tname."/".date("Y")."/".date("m")."/".date("d")."/"; 
+		if($this->thumb)
+        {
 			$this->thumb =  explode(",", $this->thumb);
 		}
-		if($tbimg = $this->thumbImg){
+		if($tbimg = $this->thumbImg)
+        {
 			if(!stristr($tbimg,"无水印")) $tbimg = $tbimg.",无水印|0";
 			$this->thumbImg =  explode(",", $tbimg);
 		}
 	}
 	
-   
-	
-	
- 
 	
 	public function actionIndex()
-	{
+	{       
+        $dirs      = str_replace( $this->url."/", "", $this->dir);
+        $dirlist   = dirUtil::dir_list($dirs) ;
+        $newdirArr = $anewdirArr = array();
+
+        foreach($dirlist as $key=>$r)
+        {
+            //$images =  Yii::$app->imagemod->load($r) ;
+            $anewdirArr[$key]["dir"] = $r; 	
+            $anewdirArr[$key]["time"] = filemtime($r);
+            $anewdirArr[$key]["date"] = date("Y-m-d G:i:s",filemtime($r));
+            //$anewdirArr[$key]["type"] = $images->file_src_mime;
+            //$anewdirArr[$key]["size"] =  formatBytes($images->file_src_size); 	
+            $anewdirArr[$key]["size"] =  filesize($r); 
+		} 
 	 
- 		  $dirs =  str_replace( $this->url."/", "", $this->dir);
-  
-          $dirlist =  dir_list($dirs) ;
-		  $newdirArr = array();
-		 
-          foreach($dirlist as $key=>$r)
-          {
-          
-			    
-			  // $images =  Yii::app()->imagemod->load($r) ;
-			   $anewdirArr[$key]["dir"] = $r; 	
-			   $anewdirArr[$key]["time"] = filemtime($r);
-			   $anewdirArr[$key]["date"] = date("Y-m-d G:i:s",filemtime($r));
-			 //  $anewdirArr[$key]["type"] = $images->file_src_mime;
-			 //   $anewdirArr[$key]["size"] =  formatBytes($images->file_src_size); 	
-		      $anewdirArr[$key]["size"] =  filesize($r); 
-		  } 
-		 
-	 
-		 $anewdirArr =   array_sort($anewdirArr,"time","desc");
-         $allfiles = array();
-         foreach($anewdirArr as $key=>$row){
-		    if(!strpos($row["dir"],"584_") &&
-			!strpos($row["dir"],"927_")
-			&& !strpos($row["dir"],"120X90_")
-			&& !strpos($row["dir"],"100X129_")
-			&& !strpos($row["dir"],"195X_")
-			
-			)
-			{
-              	 $allfiles[$key] = $row;
-			     $allfiles[$key]["dir"]=$row["dir"];
- 			}
-		 }	 
+		$anewdirArr = Util::array_sort($anewdirArr,"time","desc");
+        $allfiles = array();
+        
+        foreach($anewdirArr as $key=>$row){
+            if( !strpos($row["dir"],"584_") 
+                && !strpos($row["dir"],"927_")
+                && !strpos($row["dir"],"120X90_")
+                && !strpos($row["dir"],"100X129_")
+                && !strpos($row["dir"],"195X_")
+            ){
+                 $allfiles[$key] = $row;
+                 $allfiles[$key]["dir"]=$row["dir"];
+            }
+        }	 
 	    
-          $this->render("index",
-		  		array(
-		  				"auto"=>$this->auto,
-		  				"ext"=>$this->ext,
-		  				"max_num"=>$this->max_num,
-		  				"max_size"=>$this->max_size,
-		  				"multi"=>$this->multi,  
-		  				"thumb"=>$this->thumb, 
-		  				"thumb1"=>$_GET['thumb'],
-		  				"thumbImg"=>$this->thumbImg, 
-		  				"thumbImg1"=>$_GET['thumbImg'], 
-		  				"model"=>$this->model, 
-		  				"dirlist"=>$allfiles,  
-		  				"dirs"=>$dirs, 
-		  				"allselect"=>$this->allselect, 
-		  				"style"=>$this->style, 
-		              )
-		  		);
+        return  $this->render("index",
+                array(
+                    "auto"=>$this->auto,
+                    "ext"=>$this->ext,
+                    "max_num"=>$this->max_num,
+                    "max_size"=>$this->max_size,
+                    "multi"=>$this->multi,  
+                    "thumb"=>$this->thumb, 
+                    "thumb1"=>$_GET['thumb'],
+                    "thumbImg"=>$this->thumbImg, 
+                    "thumbImg1"=>$_GET['thumbImg'], 
+                    "model"=>$this->model, 
+                    "dirlist"=>$allfiles,  
+                    "dirs"=>$dirs, 
+                    "allselect"=>$this->allselect, 
+                    "style"=>$this->style, 
+                )
+            );
 	}
 	
 
 	
 	
 	//上传动作
-    public function actionupload()
+    public function actionUpload()
     { 
     	$targetFolder1 =  str_replace("admin/","",$this->dir); // Relative to the root
     	$targetFolder =   $this->dir ; // Relative to the root
-    	
     	$fileTypes= array();
-    	
-   //    folder($targetFolder1);
-    	
     	$verifyToken = md5('unique_salt' . $_POST['timestamp']);
-    	
     	$this->model = $_POST["model"];
-    	
     	if (!empty($_FILES) && $_POST['token'] == $verifyToken) {
     		
     		$tempFile = $_FILES['Filedata']['tmp_name'];
-    		
-    		$targetPath = $_SERVER['DOCUMENT_ROOT'] ."/". $targetFolder;
-    		
-    		 folder($targetFolder1);
-    		
+    		$targetPath = $_SERVER['DOCUMENT_ROOT'] ."/". $targetFolder;	
+    		Util::folder($targetFolder1);
+            
     		//重命名判断  
     		if($this->rename)
-    			$targetFile =  '/'.$this->tag.''.date("Ymdgis").rand(0, 1000).".".fileext($_FILES['Filedata']['name']) ;
-    		else
+            {    
+    			$targetFile =  '/'.$this->tag.''.date("Ymdgis").rand(0, 1000).".". Util::fileext($_FILES['Filedata']['name']) ;
+    		}else{
     			$targetFile =   '/'. str_replace(" ", "", ($_FILES['Filedata']['name']));
-     
+            }
     		$targetFile1 = iconv("UTF-8","gb2312", $targetFile);
 
     		$ar = explode(";",$this->ext);
@@ -219,19 +211,19 @@ class UpfController extends Controller
     		$fileParts = pathinfo($_FILES['Filedata']['name']);
     	    
     	    if (in_array($fileParts['extension'],$fileTypes)) {
-    	    	
-    	    	 move_uploaded_file($tempFile,rtrim($targetPath,'/') .$targetFile1);
+    	    	print_r($tempFile);
+                print_r('<br/>');
+                print_r(rtrim($targetPath,'/') .$targetFile1);
 
-    	    	 $output =  str_replace("..".$this->url,$this->url, rtrim($targetFolder,'/').$targetFile);
+    	    	move_uploaded_file($tempFile,rtrim($targetPath,'/') .$targetFile1);
+    	    	$output =  str_replace("..".$this->url,$this->url, rtrim($targetFolder,'/').$targetFile);
     	    	 
 				$file =   iconv("UTF-8","gb2312", $output);
 				$file= str_replace($this->url."/", "", $file);
 				$this->pic = $file;
 		        $this->sctb();
     	    	 echo   rtrim($targetPath,'/') .$targetFile1."|".$output."|".$this->model;
-     		} 
-     		else 
-     		{
+     		} else {
     			echo 'Invalid file type.';
     		}
     	}
@@ -248,7 +240,7 @@ class UpfController extends Controller
 	{  
  	    $type ="daotu";
 	    if($this->style) $type = "contents";
- 		$TbArr = Yii::app()->params["picupload"][$this->model]["thumb"][$type];
+ 		$TbArr = Yii::$app->params["picupload"][$this->model]["thumb"][$type];
         foreach($TbArr as $r)
 		{
 		   $this->scthumb($r["size"],$r["watermark"]);
@@ -293,7 +285,7 @@ class UpfController extends Controller
              file_put_contents($target,file_get_contents($file));
 		}else{
 			if(!$height)  $height = intval(($width/$w)*$h);
-			$img = Yii::app()->simpleImage->load($file);
+			$img = Yii::$app->simpleImage->load($file);
 		    $img->resize($width,$height);
 			$img->save($target);
 		}
@@ -301,7 +293,7 @@ class UpfController extends Controller
 		if($this->shui){
 			if($watermark){  
 			$wimg = "public/images/thumb/".$this->shui;
-			$img = Yii::app()->imagemod->load($target);
+			$img = Yii::$app->imagemod->load($target);
 			$img->file_overwrite =  true;
 			$img->image_watermark       = $wimg ;
 			$img->image_watermark_position = 'R,b';
@@ -313,11 +305,5 @@ class UpfController extends Controller
 		}
 
 	}
-	
-	
-    
- 
- 
-	
 	
 }

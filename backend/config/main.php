@@ -18,6 +18,9 @@ return [
         'admin' => [
             'class' => 'app\module\admin\admin',
         ],
+        'upf' => [
+            'class' => 'app\module\upf\upf',
+        ],
         'news' => [
             'class' => 'app\module\news\news',
         ]

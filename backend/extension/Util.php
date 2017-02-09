@@ -11,33 +11,28 @@ class Util
 	 */
 
 	 //文件大小转换
-	 function formatBytes($size) { 
-	  $units = array(' B', ' KB', ' MB', ' GB', ' TB'); 
-	  for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024; 
-	  return round($size, 2).$units[$i]; 
-	 }
+	static function formatBytes($size) { 
+        $units = array(' B', ' KB', ' MB', ' GB', ' TB'); 
+        for ($i = 0; $size >= 1024 && $i < 4; $i++) $size /= 1024; 
+        return round($size, 2).$units[$i]; 
+	}
 	 
 	/**
 	 * 多维数组键值排序
 	 * @param $arr  处理数组  $keys 指定键值 $type 排序方式
 	 * @return new array;
 	 */
-	function array_sort($arr,$keys,$type='asc')
+	static function array_sort($arr,$keys,$type='asc')
 	{ 
 		$keysvalue = $new_array = array();
 		foreach ($arr as $k=>$v){
 			$keysvalue[$k] = $v[$keys];
 		}
-		
-
 		if($type == 'asc'){
 			asort($keysvalue);
 		}else{
 			arsort($keysvalue);
 		}
-		
-	 
-		
 		reset($keysvalue);
 		foreach ($keysvalue as $k=>$v){
 			$new_array[$k] = $arr[$k];
@@ -50,7 +45,7 @@ class Util
 	 * @param $string 需要处理的字符串或数组
 	 * @return mixed
 	 */
-	function new_add_slashes($string)
+	static function new_add_slashes($string)
 	{
 		if(!is_array($string))return addslashes($string);
 		foreach($string as $key=>$val)
@@ -66,7 +61,7 @@ class Util
 	 * @param $string 需要处理的字符串或数组
 	 * @return mixed
 	 */
-	function new_stripslashes($string) {
+	static function new_stripslashes($string) {
 		if(!is_array($string)) return stripslashes($string);
 		foreach($string as $key => $val) $string[$key] = new_stripslashes($val);
 		return $string;
@@ -77,7 +72,7 @@ class Util
 	 * @param $obj 需要处理的字符串或数组
 	 * @return mixed
 	 */
-	function new_html_special_chars($string) {
+	static function new_html_special_chars($string) {
 		if(!is_array($string)) return htmlspecialchars($string);
 		foreach($string as $key => $val) $string[$key] = new_html_special_chars($val);
 		return $string;
@@ -87,7 +82,7 @@ class Util
 	* @parame $string
 	* @return string
 	*/
-	function safe_replace($string)
+	static function safe_replace($string)
 	{
 		$string = str_replace('%20','',$string);
 		$string = str_replace('%27','',$string);
@@ -109,7 +104,7 @@ class Util
 	 * 过滤ASCII码从0-28的控制字符
 	 * @return String
 	 */
-	function trim_unsafe_control_chars($str) {
+	static function trim_unsafe_control_chars($str) {
 		$rule = '/[' . chr ( 1 ) . '-' . chr ( 8 ) . chr ( 11 ) . '-' . chr ( 12 ) . chr ( 14 ) . '-' . chr ( 31 ) . ']*/';
 		return str_replace ( chr ( 0 ), '', preg_replace ( $rule, '', $str ) );
 	}
@@ -119,7 +114,7 @@ class Util
 	 * 文件夹删除
 	 * @return String
 	 */
-	function deldir($dir)
+	static function deldir($dir)
 	{
 		$dh = opendir($dir);
 		while ($file = readdir($dh))
@@ -153,7 +148,7 @@ class Util
 	 * @param $string 文本域内容
 	 * @return string
 	 */
-	function trim_textarea($string) {
+	static function trim_textarea($string) {
 		$string = nl2br ( str_replace ( ' ', '&nbsp;', $string ) );
 		return $string;
 	}
@@ -164,14 +159,14 @@ class Util
 	 * @param intval $isjs 是否执行字符串格式化，默认为执行
 	 * @return string 处理后的字符串
 	 */
-	function format_js($string, $isjs = 1) {
+	static function format_js($string, $isjs = 1) {
 		$string = addslashes(str_replace(array("\r", "\n", "\t"), array('', '', ''), $string));
 		return $isjs ? 'document.write("'.$string.'");' : $string;
 	}
 	/**
 	 * 获取当前页面完整URL地址
 	 */
-	function get_url() {
+	static function get_url() {
 		$sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
 		$php_self = $_SERVER['PHP_SELF'] ? safe_replace($_SERVER['PHP_SELF']) : safe_replace($_SERVER['SCRIPT_NAME']);
 		$path_info = isset($_SERVER['PATH_INFO']) ? safe_replace($_SERVER['PATH_INFO']) : '';
@@ -184,7 +179,7 @@ class Util
 	 * @param $length
 	 * @param $dot
 	 */
-	function str_cut($string, $length, $dot = '...') {
+	static function str_cut($string, $length, $dot = '...') {
 		$strlen = strlen($string);
 		if($strlen <= $length) return $string;
 		$string = str_replace(array(' ','&nbsp;', '&amp;', '&quot;', '&#039;', '&ldquo;', '&rdquo;', '&mdash;', '&lt;', '&gt;', '&middot;', '&hellip;'), array('∵',' ', '&', '"', "'", '“', '”', '—', '<', '>', '·', '…'), $string);
@@ -244,7 +239,7 @@ class Util
 	 *
 	 * @return ip地址
 	 */
-	function ip() {
+	static function ip() {
 		if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
 			$ip = getenv('HTTP_CLIENT_IP');
 		} elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
@@ -262,7 +257,7 @@ class Util
 	 *
 	 * @return	int	单位ms
 	 */
-	function execute_time() {
+	static function execute_time() {
 		$stime = explode ( ' ', SYS_START_TIME );
 		$etime = explode ( ' ', microtime () );
 		return number_format ( ($etime [1] + $etime [0] - $stime [1] - $stime [0]), 6 );
@@ -290,7 +285,7 @@ class Util
 	* @param	string	$data	字符串
 	* @return	array	返回数组格式，如果，data为空，则返回空数组
 	*/
-	function string2array($data) {
+	static function string2array($data) {
 		if($data == '') return array();
 		@eval("\$array = $data;");
 		return $array;
@@ -302,7 +297,7 @@ class Util
 	* @param	bool	$isformdata	如果为0，则不使用new_stripslashes处理，可选参数，默认为1
 	* @return	string	返回字符串，如果，data为空，则返回空
 	*/
-	function array2string($data, $isformdata = 1) {
+	static function array2string($data, $isformdata = 1) {
 		if($data == '') return '';
 		if($isformdata) $data = new_stripslashes($data);
 		return addslashes(var_export($data, TRUE));
@@ -315,7 +310,7 @@ class Util
 	* @param	string	$filesize	字节大小
 	* @return	string	返回大小
 	*/
-	function sizecount($filesize) {
+	static function sizecount($filesize) {
 		if ($filesize >= 1073741824) {
 			$filesize = round($filesize / 1073741824 * 100) / 100 .' GB';
 		} elseif ($filesize >= 1048576) {
@@ -346,7 +341,7 @@ class Util
 	* @parame $password
 	* return boolean
 	*/
-	function is_password($password)
+	static function is_password($password)
 	{
 		$strlen = strlen($password);
 		if($strlen>=6 && $strlen<=20)
@@ -364,7 +359,7 @@ class Util
 	* @parame $string
 	* return boolean
 	*/
-	function is_bad_word($string)
+	static function is_bad_word($string)
 	{
 
 		$array = array('"','\\',' ','&','*','#','/','<','>','\r','\t','\n','#',"'");
@@ -415,7 +410,7 @@ class Util
 	* @param	string	$expiry		过期时间
 	* @return	string
 	*/
-	function sys_auth($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
+	static function sys_auth($string, $operation = 'ENCODE', $key = '', $expiry = 0) {
 		$key_length = 4;
 		$key = md5($key != '' ? $key : AUTH_KEY);
 		$fixedkey = md5($key);
@@ -440,7 +435,7 @@ class Util
 		}
 	}
 
-	function getmicrotime() {
+	static function getmicrotime() {
 		list($usec, $sec) = explode(" ",microtime());
 		return ((float)$usec + (float)$sec);
 	}
@@ -451,12 +446,12 @@ class Util
 	 * @param $filename 文件名
 	 * @return 扩展名
 	 */
-	function fileext($filename) {
+	static function fileext($filename) {
 		return strtolower(trim(substr(strrchr($filename, '.'), 1, 10)));
 	}
 	
 	//判断远程文件 
-	function check_remote_file_exists($url) 
+	static function check_remote_file_exists($url) 
 	{ 
 		$curl = curl_init($url); 
 		// 不取回数据 
@@ -482,13 +477,13 @@ class Util
 	/**
 	 * 判断是否为图片
 	 */
-	function is_image($file) {
+	static function is_image($file) {
 		$ext_arr = array('jpg','gif','png','bmp','jpeg','tiff');
 		$ext = fileext($file);
 		return in_array($ext,$ext_arr) ? $ext_arr :false;
 	}
 
-	function multi1($num, $perpage, $curpage, $mpurl ,$todiv='') { 
+	static function multi1($num, $perpage, $curpage, $mpurl ,$todiv='') { 
 
 		echo '<link href="css.css" rel="stylesheet" type="text/css" />';
 		global $_SGLOBAL;
@@ -593,7 +588,7 @@ class Util
 	}
 
 
-	function cn_substr($str, $position, $length,$type=1){
+	static function cn_substr($str, $position, $length,$type=1){
 		$startPos = strlen($str);
 		$startByte = 0;
 		$endPos = strlen($str);
@@ -626,9 +621,10 @@ class Util
 
 	}
 	//文件夹创建
-	function folder($fileurl){
+	static function folder($fileurl){
 		$luj =  explode("/",$fileurl);
 		array_pop($luj);
+        $str = '';
 		foreach($luj as $pic){
 			$str.=$pic."/";
 			if(!is_dir("./".$str))  mkdir("./".$str);
@@ -641,7 +637,7 @@ class Util
 		@num 截取的长度；
 		@patten 截取模式；
 	**/
-	function  stripstr($string,$num,$patten=1){
+	static function  stripstr($string,$num,$patten=1){
 		$str = '';
 		if(!$string) return $str ;
 		if($patten==1){
