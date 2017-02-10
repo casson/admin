@@ -210,11 +210,8 @@ class UpfController extends Controller
     		}
     		$fileParts = pathinfo($_FILES['Filedata']['name']);
     	    
-    	    if (in_array($fileParts['extension'],$fileTypes)) {
-    	    	print_r($tempFile);
-                print_r('<br/>');
-                print_r(rtrim($targetPath,'/') .$targetFile1);
-
+    	    if (in_array($fileParts['extension'],$fileTypes)) 
+            {
     	    	move_uploaded_file($tempFile,rtrim($targetPath,'/') .$targetFile1);
     	    	$output =  str_replace("..".$this->url,$this->url, rtrim($targetFolder,'/').$targetFile);
     	    	 
