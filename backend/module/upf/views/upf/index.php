@@ -55,7 +55,7 @@
                     'queueID'  : 'file_queue',
                     'uploader' : '<?php echo Yii::$app->request->baseUrl; ?>/upf/upf/upload',
                  
-                    'onUploadStart':function(){
+                    'onUploadStart':function() {
                          $("#file_upload").uploadify('settings','formData' ,{'rename': $("#rename").val(),'shui': $("#shui").val(),'st': $("#st").val()});
                     },
                  
@@ -108,8 +108,8 @@
                     },
                     
                     //上传异常处理 
-                    'onUploadError' : function(file, errorCode, errorMsg, errorString) {
-
+                    'onUploadError' : function(file, errorCode, errorMsg, errorString) 
+                    {
                         if(errorCode==-280||errorCode==-290)    //使用者自己取消的動作不再跳訊息視窗
                         {
                              return ;   
@@ -146,8 +146,7 @@
                                 break;
                             default:   
                                 msgText += uploadifyLang['file']+file.name+uploadifyLang['errorMsg888']+errorCode+"\n"+errorMsg+"\n"+errorString;
-                        }
-                        
+                        } 
                         $('.error').html(msgText);
                         $('.error').show();
                         $('.error').fadeOut(5000);
@@ -171,7 +170,6 @@
                             default:   
                                 msgText += uploadifyLang['errorMsg888']+errorCode+"\n"+errorMsg;
                         }
-                        
                         $('.error').html(msgText);
                         $('.error').show();
                         $('.error').fadeOut(5000);
