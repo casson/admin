@@ -123,7 +123,6 @@ class UpfController extends Controller
 		}
 	}
 	
-	
 	public function actionIndex()
 	{       
         $dirs      = str_replace( $this->url."/", "", $this->dir);
@@ -176,21 +175,19 @@ class UpfController extends Controller
             );
 	}
 	
-
-	
-	
 	//上传动作
     public function actionUpload()
     { 
-    	$targetFolder1 =  str_replace("admin/","",$this->dir); // Relative to the root
-    	$targetFolder =   $this->dir ; // Relative to the root
+    	$targetFolder1 =  str_replace(strstr($this->dir,'uploads', true), "", $this->dir); // Relative to the root
+    	$targetFolder  =   $this->dir ; // Relative to the root
     	$fileTypes= array();
     	$verifyToken = md5('unique_salt' . $_POST['timestamp']);
     	$this->model = $_POST["model"];
     	if (!empty($_FILES) && $_POST['token'] == $verifyToken) {
     		
     		$tempFile = $_FILES['Filedata']['tmp_name'];
-    		$targetPath = $_SERVER['DOCUMENT_ROOT'] ."/". $targetFolder;	
+    		$targetPath = $_SERVER['DOCUMENT_ROOT'] ."/". ltrim($targetFolder,'/'); 
+            
     		Util::folder($targetFolder1);
             
     		//重命名判断  
@@ -212,22 +209,19 @@ class UpfController extends Controller
     	    
     	    if (in_array($fileParts['extension'],$fileTypes)) 
             {
-    	    	move_uploaded_file($tempFile,rtrim($targetPath,'/') .$targetFile1);
+    	    	move_uploaded_file($tempFile, rtrim($targetPath,'/') .$targetFile1);
     	    	$output =  str_replace("..".$this->url,$this->url, rtrim($targetFolder,'/').$targetFile);
     	    	 
 				$file =   iconv("UTF-8","gb2312", $output);
 				$file= str_replace($this->url."/", "", $file);
 				$this->pic = $file;
 		        $this->sctb();
-    	    	 echo   rtrim($targetPath,'/') .$targetFile1."|".$output."|".$this->model;
+    	    	echo   rtrim($targetPath,'/') .$targetFile1."|".$output."|".$this->model;
      		} else {
     			echo 'Invalid file type.';
     		}
     	}
     }
-    
-    
- 
 	
 	/*
 	  自动根据模块生成缩略图||水印
@@ -237,12 +231,14 @@ class UpfController extends Controller
 	{  
  	    $type ="daotu";
 	    if($this->style) $type = "contents";
- 		$TbArr = Yii::$app->params["picupload"][$this->model]["thumb"][$type];
-        foreach($TbArr as $r)
-		{
-		   $this->scthumb($r["size"],$r["watermark"]);
-		} 		 
-		
+        if( isset(Yii::$app->params["picupload"][$this->model]["thumb"][$type]))
+        {    
+            $TbArr = Yii::$app->params["picupload"][$this->model]["thumb"][$type];
+            foreach($TbArr as $r)
+            {
+               $this->scthumb($r["size"],$r["watermark"]);
+            } 		 
+		}
   	}
 	
 	/*缩略图和加水印操作*/

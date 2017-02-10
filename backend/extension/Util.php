@@ -622,13 +622,19 @@ class Util
 	}
 	//文件夹创建
 	static function folder($fileurl){
-		$luj =  explode("/",$fileurl);
+        
+        if(!file_exists($fileurl)){
+            mkdir($fileurl, 0777, true);
+		}
+        /**
+        $luj =  explode("/",$fileurl);
 		array_pop($luj);
         $str = '';
 		foreach($luj as $pic){
 			$str.=$pic."/";
 			if(!is_dir("./".$str))  mkdir("./".$str);
 		}
+        **/
 	}
 
 	//截取网页文字，去除标签，

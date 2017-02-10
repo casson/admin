@@ -22,6 +22,7 @@
         <script type="text/javascript">
             <?php $timestamp = time();?>
             $(function() {
+                
                 $('#file_upload').uploadify({
                     'overrideEvents' : ['onDialogClose','onUploadError','onSelectError'],
                     'auto'     : <?php echo $auto ;?>,
@@ -45,18 +46,18 @@
                         
                     },
                     'buttonImage' : '<?php echo Yii::$app->controller->assetsUrl; ?>/images/swfBnt.png',
-                    'swf'      : '<?php echo Yii::$app->controller->assetsUrl; ?>/js/uploadify/uploadify.swf',
-                     'onSelect' : function(file) {  
+                    'swf'         : '<?php echo Yii::$app->controller->assetsUrl; ?>/js/uploadify/uploadify.swf',
+                    'onSelect'    : function(file) {  
                             this.addPostParam("file_name",encodeURI(file.name));//改变文件名的编码
                        },
-                    'width':75,
-                    'height':28,
+                    'width'    : 75,
+                    'height'   : 28,
                     'queueID'  : 'file_queue',
                     'uploader' : '<?php echo Yii::$app->request->baseUrl; ?>/upf/upf/upload',
                  
                     'onUploadStart':function(){
                          $("#file_upload").uploadify('settings','formData' ,{'rename': $("#rename").val(),'shui': $("#shui").val(),'st': $("#st").val()});
-                        },
+                    },
                  
                     
                     //单个文件上传成功响应
@@ -69,49 +70,43 @@
                         var delete_btn = "<div class='select_btn <?php echo $allselect==1?"select_btn_on":"select_btn_off"; ?>'></div>";
                         var div = "<div class='unit' id='unit' >"+img+delete_btn+"</div>";
                         $('#file_queue').append(div);
-                        <?php 
-                               if($allselect==1){	
-                         ?>
+                        <?php  if($allselect==1) {	?>
                         $(".unit").toggle(
-                          function () {
-                            $(this).find('img').removeClass('selected_img');
-                            $(this).find('.select_btn').removeClass("select_btn_on");
-                            $(this).find('.select_btn').addClass("select_btn_off");
-                          },
-                         function () {
-                            $(this).find('img').addClass('selected_img');
-                            $(this).find('.select_btn').addClass("select_btn_on");
-                            $(this).find('.select_btn').removeClass("select_btn_off");
-                          }
-                          
+                            function () {
+                                $(this).find('img').removeClass('selected_img');
+                                $(this).find('.select_btn').removeClass("select_btn_on");
+                                $(this).find('.select_btn').addClass("select_btn_off");
+                            },
+                            function () {
+                                $(this).find('img').addClass('selected_img');
+                                $(this).find('.select_btn').addClass("select_btn_on");
+                                $(this).find('.select_btn').removeClass("select_btn_off");
+                            }
                         );
-                        <?php }else{?>
+                        <?php } else { ?>
 
                         $(".unit").toggle(
-                                  function () {
-
-                                    $(".unit").find('img').removeClass('selected_img');
-                                    $(".unit").find('.select_btn').addClass("select_btn_off");
-                                    $(this).find('img').removeClass('selected_img');
-                                    $(this).find('.select_btn').removeClass("select_btn_on");
-                                    $(this).find('.select_btn').addClass("select_btn_off");
-                                  },
-                                 function () {
-                                    $(this).find('img').addClass('selected_img');
-                                    $(this).find('.select_btn').addClass("select_btn_on");
-                                    $(this).find('.select_btn').removeClass("select_btn_off");
-                                  }
-                                  
-                                );
-                        <?php }?> 
+                            function () {
+                                $(".unit").find('img').removeClass('selected_img');
+                                $(".unit").find('.select_btn').addClass("select_btn_off");
+                                $(this).find('img').removeClass('selected_img');
+                                $(this).find('.select_btn').removeClass("select_btn_on");
+                                $(this).find('.select_btn').addClass("select_btn_off");
+                            },
+                            function () {
+                                $(this).find('img').addClass('selected_img');
+                                $(this).find('.select_btn').addClass("select_btn_on");
+                                $(this).find('.select_btn').removeClass("select_btn_off");
+                            }
+                        );
+                        <?php } ?> 
                          
                         if(this.settings.uploadLimit>1)
                         {
                             $('#file_upload').uploadify('upload');
-                        }
-                        
-                                    
+                        }            
                     },
+                    
                     //上传异常处理 
                     'onUploadError' : function(file, errorCode, errorMsg, errorString) {
 
@@ -245,14 +240,11 @@
                 </tr> 
               
             <?php 
-                         foreach($dirlist as $key=>$r)
-                         {
-                         
-                            $picname = str_replace($dirs, "", iconv("gb2312","UTF-8", $r["dir"]));
-             
-                            
-                            // $myfile = Yii::$app->file->set($r, true);
-                  
+            
+                foreach($dirlist as $key=>$r)
+                {
+                    $picname = str_replace($dirs, "", iconv("gb2312","UTF-8", $r["dir"]));           
+            
             ?>
                 <tr id="<?php echo $key;?>"> 
                     <td width="37%" class="hback" >
@@ -268,25 +260,21 @@
                     </td>
                     <td width="13%" class="hback"><?php echo $r["date"];?></td>
                 </tr>
-            <?php   }?> 
+            <?php } ?> 
             </tbody>  
         </table>
     </div>
     <style>
-    #piao img{width:expression(this.width > 300  ? 300 : true); max-width:300px;}
-           #piao { position:absolute; margin-left:160px;}
-
+       #piao img{width:expression(this.width > 300  ? 300 : true); max-width:300px;}
+       #piao { position:absolute; margin-left:160px;}
     </style>
     <script>
     $(document).ready(function(){
         $('ul.tab_header li').each(function(i)
         {
-            
             $(this).bind('click',function(){
-                 changeShowMode(i);
-                
-            });
-            
+                 changeShowMode(i);      
+            });   
         })
     })
     //切换样式及显示模式
@@ -302,10 +290,7 @@
                 $(this).addClass('tab_on');
                 $(this).removeClass('tab_off');
                 $('#'+content_id).show();
-            
-            }
-            else
-            {
+            } else {
                 $(this).addClass('tab_off');
                 $(this).removeClass('tab_on');
                 $('#'+content_id).hide();

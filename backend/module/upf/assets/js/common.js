@@ -236,7 +236,7 @@ function insertpicck(content) {
            }
 	}
 	var editor = CKEDITOR.instances[obj[0].id];
- 
+
 		editor.insertHtml(content);
 }
 

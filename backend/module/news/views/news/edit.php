@@ -26,7 +26,7 @@
 					<tr>
 					<td width="80"><?php echo Html::activeLabel($model,'content');?></td> 
 					<td>
-                        <?php echo Html::activeTextArea($model,'content',array('class'=>'text ckeditor','style'=>'width:600px;height:480px')); ?>
+                        <?php echo Html::activeTextArea($model,'content',array('class'=>'ckeditor','style'=>'width:600px;height:480px')); ?>
                         <div style="margin-top:10px;">
                             <?php echo Uploadify::widget(array("ext"=>'*.gif;*.GIF;*.jpg;*.JPG;*.png;*.PNG;*.jpeg;*.JPEG;','style'=>1,'mode'=>2,'max_num'=>100,'max_size'=>"0",'multi'=>'1','auto'=>'true','thumbImg'=>'有水印|ylyimg.png','thumb'=>'100X129,121X90','cname'=>"body"));?>
                         </div>
