@@ -12,14 +12,17 @@
 				<tbody>
 					<tr>
 					<td width="80"><?php echo Html::activeLabel($model,'title');?></td> 
-					<td><?php echo Html::activeTextInput($model,'title',  array('class'=>'text','style'=>'width:400px')) ?>
-					</td>
+					<td>
+                        <?php echo Html::activeTextInput($model,'title',  array('class'=>'text','style'=>'width:400px')); ?>
+                        <?php echo $model->error('title');?>
+                    </td>
 					</tr>
                     
                     <tr>
                     <td><?php echo Html::activeLabel($model, 'type'); ?></td>    
                     <td>
                         <?php echo Html::activeDropDownList($model, 'type', $model->getNewsType(), array('class'=>'text','style'=>'width:250px')); ?>
+                        <?php echo $model->error('type');?>
                     </td>
                     </tr>
                     
@@ -30,6 +33,7 @@
                         <div style="margin-top:10px;">
                             <?php echo Uploadify::widget(array("ext"=>'*.gif;*.GIF;*.jpg;*.JPG;*.png;*.PNG;*.jpeg;*.JPEG;','style'=>1,'mode'=>2,'max_num'=>100,'max_size'=>"0",'multi'=>'1','auto'=>'true','thumbImg'=>'有水印|ylyimg.png','thumb'=>'100X129,121X90','cname'=>"body"));?>
                         </div>
+                        <?php echo $model->error('content');?>
                     </td>
 					</tr>			
 				</tbody>

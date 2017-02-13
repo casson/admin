@@ -12,6 +12,31 @@ class NewsEditForm extends Model
     public $content;
     public $type;
     
+    /**
+     * attributes error rules 
+     *
+     */
+    public function rules()
+    {
+        return [
+            ['title','required'],
+            ['content','required'],
+            ['type', 'in', 'range' => [1, 2]]
+        ];
+    }
+    
+    /**
+     * view attributes error
+     *
+     */
+    public function error($attr)
+    {
+        if($error = $this->getErrors($attr))
+        {
+            return '&nbsp;<font color="red">'.$error[0].'</div>';
+        }        
+    }
+    
     public function attributeLabels()
     {
         return array(
