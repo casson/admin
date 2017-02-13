@@ -103,9 +103,11 @@ class ActionMenuHelper
 		$resource = Resource::find()->where(array('module'=>$module,'controller'=>$controller,'action'=>$action, 'disabled'=>0))->one();
         if($son_menu==1)
 		{
-			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\'))' ,array(':parent_id'=>$resource->parent_id))->all();	
+			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:parent_id or parent_id=:parent_id and menu=1 and disabled=0 and (btn_class IS  NULL or (btn_class IS NOT NULL and btn_class!=\'search_trigger\')) order by list_order asc' ,array(':parent_id'=>$resource->parent_id))
+                        ->all();	
 		} else {
-			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:resource_id or parent_id=:resource_id and menu=1 and disabled=0',array(':resource_id'=>$resource->resource_id))->all();
+			$menu_list = Resource::findBySql('select * from dt_resource where resource_id=:resource_id or parent_id=:resource_id and menu=1 and disabled=0 order by list_order asc',array(':resource_id'=>$resource->resource_id))
+                        ->all();
 		}        
 		$now_url = Yii::$app->request->getUrl();
            

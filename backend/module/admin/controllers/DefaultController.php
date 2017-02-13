@@ -52,8 +52,7 @@ class DefaultController extends EController
     {   
         $this->_loginCheck();
         if($_SESSION['role_id']==1){
-            $top_menus=Resource::findAll(array('parent_id'=>0,'disabled'=>0,'menu'=>1));
-            //$top_menus->orderBy('list_order', 'ASC'); 
+            $top_menus=Resource::find()->where(array('parent_id'=>0,'disabled'=>0,'menu'=>1))->orderBy('list_order ASC')->all(); 
         }else{
             
             $role_resource = RoleResource::find()->with(array('resource'=>function($query){
