@@ -18,4 +18,4 @@ return array(
                   'password' => 'admin',
                   'charset' => 'utf8'
 		)
-	));
+	)); 
