@@ -13,7 +13,7 @@ return array(
 		),
 		'app' => array(
 			'class' => 'yii\db\Connection',
-                  'dsn' => 'mysql:host=localhost;dbname=app',
+                  'dsn' => 'mysql:host=127.0.0.1;dbname=app',
                   'username' => 'root',
                   'password' => 'admin',
                   'charset' => 'utf8'
